@@ -1,0 +1,2 @@
+# Force LF pour tout sauf Windows-only
+* text=auto eol=lf
