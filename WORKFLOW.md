@@ -47,10 +47,11 @@ git push origin preprod
 ```
 
 - Supprime la branche si tout est validé :
-  ```bash
-  git branch -d feature/ma-fonctionnalité
-  git push origin --delete feature/ma-fonctionnalité
-  ```
+  
+```bash
+git branch -d feature/ma-fonctionnalité
+git push origin --delete feature/ma-fonctionnalité
+```
 
 ---
 
@@ -75,10 +76,11 @@ git push origin main
 
 ## 🔖 6. Création d'un tag versionné sur le commit de merge en question
 
-- Repère le hash du commit de merge si tu veux tagger manuellement un commit spécifique
+- Repère le hash du commit de merge si tu veux tagger manuellement un commit spécifique :
   ```bash
   git checkout main
   git log --oneline
+  git tag -a v1.0.0 1fb6fa1 -m "Release: v1.0.0 - fonctionnalité X"
   ```
 
 
