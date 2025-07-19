@@ -9,6 +9,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use App\Repository\FoodRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -67,6 +69,24 @@ class Food
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['food:read'])]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, Contain>
+     */
+    #[ORM\OneToMany(targetEntity: Contain::class, mappedBy: 'food')]
+    private Collection $contains;
+
+    /**
+     * @var Collection<int, Constitute>
+     */
+    #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'food')]
+    private Collection $constitutes;
+
+    public function __construct()
+    {
+        $this->contains = new ArrayCollection();
+        $this->constitutes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -153,6 +173,64 @@ class Food
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contain>
+     */
+    public function getContains(): Collection
+    {
+        return $this->contains;
+    }
+
+    public function addContain(Contain $contain): static
+    {
+        if (!$this->contains->contains($contain)) {
+            $this->contains->add($contain);
+            $contain->setFood($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContain(Contain $contain): static
+    {
+        if ($this->contains->removeElement($contain)) {
+            if ($contain->getFood() === $this) {
+                $contain->setFood(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Constitute>
+     */
+    public function getConstitutes(): Collection
+    {
+        return $this->constitutes;
+    }
+
+    public function addConstitute(Constitute $constitute): static
+    {
+        if (!$this->constitutes->contains($constitute)) {
+            $this->constitutes->add($constitute);
+            $constitute->setFood($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConstitute(Constitute $constitute): static
+    {
+        if ($this->constitutes->removeElement($constitute)) {
+            if ($constitute->getFood() === $this) {
+                $constitute->setFood(null);
+            }
+        }
 
         return $this;
     }
