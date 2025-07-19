@@ -32,11 +32,21 @@ interface Dish {
 }
 
 interface Constitute {
-  id: number;
+  id?: number;
+  '@id'?: string;
   food?: Food;
   dish?: Dish;
   food_quantity?: number;
   dish_quantity?: number;
+}
+
+function getConstituteId(constitute: Constitute): number | undefined {
+  if (typeof constitute.id === 'number') return constitute.id;
+  if (typeof constitute['@id'] === 'string') {
+    const m = constitute['@id'].match(/\/constitutes\/(\d+)$/);
+    return m ? parseInt(m[1], 10) : undefined;
+  }
+  return undefined;
 }
 
 interface AddItemFormInputs {
@@ -387,10 +397,13 @@ const ComposeMealPage: React.FC = () => {
                 <div className="space-y-3">
                   {constitutes.map((constitute, index) => (
                     <ConstituteNutritionCard
-                      key={constitute.id || `constitute-${index}`}
+                      key={getConstituteId(constitute) || `constitute-${index}`}
                       constitute={constitute}
                       jwt={jwt || ''}
-                      onRemove={() => handleRemoveItem(constitute.id)}
+                      onRemove={() => {
+                        const id = getConstituteId(constitute);
+                        if (id !== undefined) handleRemoveItem(id);
+                      }}
                     />
                   ))}
                 </div>

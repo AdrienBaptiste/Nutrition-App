@@ -25,9 +25,19 @@ interface Food {
 }
 
 interface Contain {
-  id: number;
+  id?: number;
+  '@id'?: string;
   food: Food;
   quantity: number;
+}
+
+function getContainId(contain: Contain): number | undefined {
+  if (typeof contain.id === 'number') return contain.id;
+  if (typeof contain['@id'] === 'string') {
+    const m = contain['@id'].match(/\/contains\/(\d+)$/);
+    return m ? parseInt(m[1], 10) : undefined;
+  }
+  return undefined;
 }
 
 interface AddFoodFormInputs {
@@ -311,7 +321,7 @@ const ComposeDishPage: React.FC = () => {
               ) : (
                 <div className="space-y-3">
                   {contains.map((contain) => (
-                    <Card key={contain.id}>
+                    <Card key={getContainId(contain) || `contain-${contain.food.id}`}>
                       <div className="flex justify-between items-center">
                         <div>
                           <h3 className="font-semibold text-gray-800">{contain.food.name}</h3>
@@ -321,7 +331,10 @@ const ComposeDishPage: React.FC = () => {
                           </p>
                         </div>
                         <button
-                          onClick={() => handleRemoveFood(contain.id)}
+                          onClick={() => {
+                              const id = getContainId(contain);
+                              if (id !== undefined) handleRemoveFood(id);
+                            }}
                           className="text-red-600 hover:text-red-800 text-sm"
                         >
                           Supprimer
