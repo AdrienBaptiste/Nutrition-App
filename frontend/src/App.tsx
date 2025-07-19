@@ -5,6 +5,12 @@ import HomePage from './pages/HomePage';
 import FoodsPage from './pages/FoodsPage';
 import CreateFoodPage from './pages/CreateFoodPage';
 import EditFoodPage from './pages/EditFoodPage';
+import MealsPage from './pages/MealsPage';
+import CreateMealPage from './pages/CreateMealPage';
+import EditMealPage from './pages/EditMealPage';
+import WeightsPage from './pages/WeightsPage';
+import CreateWeightPage from './pages/CreateWeightPage';
+import EditWeightPage from './pages/EditWeightPage';
 import PrivateRoute from './components/routing/PrivateRoute';
 import './App.css';
 
@@ -50,9 +56,56 @@ function App() {
             </PrivateRoute>
           } 
         />
-        {/* Futures pages privées */}
-        {/* <Route path="/meals" element={<PrivateRoute><MealsPage /></PrivateRoute>} /> */}
-        {/* <Route path="/calculator" element={<CalculatorPage />} /> */}
+        {/* Routes CRUD Repas */}
+        <Route 
+          path="/meals" 
+          element={
+            <PrivateRoute>
+              <MealsPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/meals/new" 
+          element={
+            <PrivateRoute>
+              <CreateMealPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/meals/:id/edit" 
+          element={
+            <PrivateRoute>
+              <EditMealPage />
+            </PrivateRoute>
+          } 
+        />
+        {/* Routes CRUD Poids */}
+        <Route 
+          path="/weights" 
+          element={
+            <PrivateRoute>
+              <WeightsPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/weights/new" 
+          element={
+            <PrivateRoute>
+              <CreateWeightPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/weights/:id/edit" 
+          element={
+            <PrivateRoute>
+              <EditWeightPage />
+            </PrivateRoute>
+          } 
+        />
       </Routes>
     </BrowserRouter>
   );

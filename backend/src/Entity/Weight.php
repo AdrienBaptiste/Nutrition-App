@@ -22,10 +22,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Put(uriTemplate: '/v1/weights/{id}'),
         new Delete(uriTemplate: '/v1/weights/{id}')
     ],
+    formats: ['jsonld' => ['application/ld+json'], 'json' => ['application/json']],
     normalizationContext: ['groups' => ['weight:read']],
     denormalizationContext: ['groups' => ['weight:write']],
     security: 'is_granted("ROLE_USER")',
-    securityMessage: 'Access denied.'
+    securityMessage: 'Access denied.',
+    provider: 'App\State\WeightStateProvider',
+    processor: 'App\State\WeightStateProcessor'
 )]
 class Weight
 {

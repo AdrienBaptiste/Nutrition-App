@@ -23,10 +23,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Put(uriTemplate: '/v1/meals/{id}'),
         new Delete(uriTemplate: '/v1/meals/{id}')
     ],
+    formats: ['jsonld' => ['application/ld+json'], 'json' => ['application/json']],
     normalizationContext: ['groups' => ['meal:read']],
     denormalizationContext: ['groups' => ['meal:write']],
     security: 'is_granted("ROLE_USER")',
-    securityMessage: 'Access denied.'
+    securityMessage: 'Access denied.',
+    provider: 'App\State\MealStateProvider',
+    processor: 'App\State\MealStateProcessor'
 )]
 class Meal
 {
