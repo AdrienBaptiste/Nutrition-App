@@ -168,9 +168,18 @@ const MealsPage: React.FC = () => {
                     <p className="text-gray-600 text-sm mb-3">{meal.description}</p>
                   )}
                   
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 mb-3">
                     <span className="font-medium">Date:</span>
                     <span className="ml-1">{formatDate(meal.date)}</span>
+                  </div>
+                  
+                  <div className="mt-3 pt-3 border-t">
+                    <Link
+                      to={`/meals/${meal.id}/compose`}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      Gérer la composition →
+                    </Link>
                   </div>
                 </Card>
               ))}

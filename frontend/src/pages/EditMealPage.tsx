@@ -77,6 +77,13 @@ const EditMealPage: React.FC = () => {
   const onSubmit = async (data: MealFormInputs) => {
     setServerError(undefined);
     
+    console.log('EditMealPage - ID du repas:', id);
+    console.log('EditMealPage - Données envoyées:', {
+      name: data.name,
+      description: data.description || null,
+      date: new Date(data.date).toISOString(),
+    });
+    
     try {
       const response = await fetch(`http://localhost:8000/api/v1/meals/${id}`, {
         method: 'PUT',

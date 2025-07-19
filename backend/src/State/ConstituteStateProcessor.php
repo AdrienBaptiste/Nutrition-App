@@ -75,8 +75,11 @@ class ConstituteStateProcessor implements ProcessorInterface
             if ($data->getMeal()->getUser() !== $user) {
                 throw new \RuntimeException('Access denied');
             }
+            
+            // Supprimer manuellement le constitute
             $this->entityManager->remove($data);
             $this->entityManager->flush();
+            
             return null;
         }
 
