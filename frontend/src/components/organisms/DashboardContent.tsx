@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProfileCard from '../molecules/ProfileCard';
 import DashboardSectionCard from '../molecules/DashboardSectionCard';
 
@@ -14,9 +15,25 @@ interface DashboardContentProps {
 }
 
 const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
+  const navigate = useNavigate();
+  
   const handleSectionClick = (section: string) => {
-    console.log(`Navigation vers ${section}`);
-    // TODO: Implémenter la navigation vers les différentes sections
+    switch (section) {
+      case 'aliments':
+        navigate('/foods');
+        break;
+      case 'repas':
+        navigate('/meals');
+        break;
+      case 'plats':
+        navigate('/dishes');
+        break;
+      case 'poids':
+        navigate('/weights');
+        break;
+      default:
+        console.log(`Navigation vers ${section}`);
+    }
   };
 
   return (
@@ -30,26 +47,34 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
         {/* Sections principales */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <DashboardSectionCard
-            title="Aliments"
-            description="Gérez vos aliments favoris"
-            buttonText="Voir les aliments"
-            buttonColor="blue"
+            title="Mes aliments"
+            description="Gérez votre base d'aliments"
+            buttonText="Gérer mes aliments"
+            buttonColor="green"
             onButtonClick={() => handleSectionClick('aliments')}
           />
           
           <DashboardSectionCard
-            title="Repas"
-            description="Enregistrez vos repas"
-            buttonText="Voir les repas"
-            buttonColor="green"
+            title="Mes repas"
+            description="Enregistrez et organisez vos repas"
+            buttonText="Gérer mes repas"
+            buttonColor="blue"
             onButtonClick={() => handleSectionClick('repas')}
           />
           
           <DashboardSectionCard
-            title="Poids"
-            description="Suivez votre évolution"
-            buttonText="Voir le suivi"
+            title="Mes plats"
+            description="Créez des plats composés d'aliments"
+            buttonText="Gérer mes plats"
             buttonColor="purple"
+            onButtonClick={() => handleSectionClick('plats')}
+          />
+          
+          <DashboardSectionCard
+            title="Suivi du poids"
+            description="Suivez votre évolution corporelle"
+            buttonText="Gérer mes pesées"
+            buttonColor="red"
             onButtonClick={() => handleSectionClick('poids')}
           />
         </div>
