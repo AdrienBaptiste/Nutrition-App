@@ -11,6 +11,9 @@ import EditMealPage from './pages/EditMealPage';
 import WeightsPage from './pages/WeightsPage';
 import CreateWeightPage from './pages/CreateWeightPage';
 import EditWeightPage from './pages/EditWeightPage';
+import DishesPage from './pages/DishesPage';
+import CreateDishPage from './pages/CreateDishPage';
+import EditDishPage from './pages/EditDishPage';
 import PrivateRoute from './components/routing/PrivateRoute';
 import './App.css';
 
@@ -103,6 +106,32 @@ function App() {
           element={
             <PrivateRoute>
               <EditWeightPage />
+            </PrivateRoute>
+          } 
+        />
+        
+        {/* Routes CRUD Plats */}
+        <Route 
+          path="/dishes" 
+          element={
+            <PrivateRoute>
+              <DishesPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/dishes/new" 
+          element={
+            <PrivateRoute>
+              <CreateDishPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/dishes/:id/edit" 
+          element={
+            <PrivateRoute>
+              <EditDishPage />
             </PrivateRoute>
           } 
         />
