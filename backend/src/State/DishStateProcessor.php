@@ -30,9 +30,19 @@ class DishStateProcessor implements ProcessorInterface
 
         // Pour les modifications (PUT/PATCH)
         if ($operation instanceof \ApiPlatform\Metadata\Put || $operation instanceof \ApiPlatform\Metadata\Patch) {
-            // Vérifier que le plat appartient à l'utilisateur connecté
-            if ($data->getUser() !== $user) {
-                throw new \RuntimeException('Access denied');
+            // Récupérer le plat existant depuis la base de données
+            if (isset($uriVariables['id'])) {
+                $existingDish = $this->entityManager->getRepository(Dish::class)->find($uriVariables['id']);
+                if (!$existingDish || $existingDish->getUser() !== $user) {
+                    throw new \RuntimeException('Access denied');
+                }
+                
+                // Mettre à jour les champs de l'entité existante au lieu de créer une nouvelle
+                $existingDish->setName($data->getName());
+                $existingDish->setDescription($data->getDescription());
+                
+                // Utiliser l'entité existante pour la suite du traitement
+                $data = $existingDish;
             }
         }
 

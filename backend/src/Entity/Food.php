@@ -38,11 +38,11 @@ class Food
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['food:read'])]
+    #[Groups(['food:read', 'dish:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['food:read', 'food:write'])]
+    #[Groups(['food:read', 'food:write', 'dish:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -62,7 +62,7 @@ class Food
     private ?float $fat = null;
 
     #[ORM\Column]
-    #[Groups(['food:read', 'food:write'])]
+    #[Groups(['food:read', 'food:write', 'dish:read'])]
     private ?float $calories = null;
 
     #[ORM\ManyToOne(inversedBy: 'foods')]
