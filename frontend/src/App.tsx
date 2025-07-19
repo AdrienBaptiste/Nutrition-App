@@ -15,6 +15,7 @@ import DishesPage from './pages/DishesPage';
 import CreateDishPage from './pages/CreateDishPage';
 import EditDishPage from './pages/EditDishPage';
 import ComposeDishPage from './pages/ComposeDishPage';
+import ComposeMealPage from './pages/ComposeMealPage';
 import PrivateRoute from './components/routing/PrivateRoute';
 import './App.css';
 
@@ -133,6 +134,14 @@ function App() {
           element={
             <PrivateRoute>
               <ComposeDishPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/meals/:id/compose" 
+          element={
+            <PrivateRoute>
+              <ComposeMealPage />
             </PrivateRoute>
           } 
         />

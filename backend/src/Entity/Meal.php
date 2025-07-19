@@ -61,7 +61,7 @@ class Meal
     /**
      * @var Collection<int, Constitute>
      */
-    #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'meal')]
+    #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'meal', cascade: ['remove'])]
     #[Groups(['meal:read'])]
     private Collection $constitutes;
 
