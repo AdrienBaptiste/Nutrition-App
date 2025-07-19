@@ -36,6 +36,10 @@ interface AddFoodFormInputs {
 }
 
 const ComposeDishPage: React.FC = () => {
+  const [nutrition, setNutrition] = useState<{calories: number, protein: number, carbs: number, fat: number} | null>(null);
+  const [nutritionLoading, setNutritionLoading] = useState(false);
+  const [nutritionError, setNutritionError] = useState<string | null>(null);
+
   const { jwt } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -146,6 +150,21 @@ const ComposeDishPage: React.FC = () => {
 
     fetchData();
   }, [id, jwt]);
+
+  useEffect(() => {
+    if (!id || !jwt) return;
+    setNutritionLoading(true);
+    fetch(`http://localhost:8000/api/v1/dishes/${id}/nutrition`, {
+      headers: { 'Authorization': `Bearer ${jwt}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Erreur lors du chargement du résumé nutritionnel');
+        return res.json();
+      })
+      .then(setNutrition)
+      .catch(() => setNutritionError('Erreur lors du chargement du résumé nutritionnel'))
+      .finally(() => setNutritionLoading(false));
+  }, [id, jwt, contains]);
 
   const onAddFood = async (data: AddFoodFormInputs) => {
     try {
@@ -397,11 +416,22 @@ const ComposeDishPage: React.FC = () => {
               ← Retour aux plats
             </Link>
             
+            {/* Résumé nutritionnel du plat */}
             {contains.length > 0 && (
-              <div className="text-sm text-gray-600">
-                <strong>Total :</strong> {contains.reduce((total, contain) => 
-                  total + Math.round((contain.food.calories * contain.quantity) / 100), 0
-                )} kcal
+              <div className="my-4">
+                <h2 className="text-lg font-semibold mb-2">Résumé nutritionnel du plat</h2>
+                {nutritionLoading ? (
+                  <div className="text-gray-500">Chargement du résumé nutritionnel...</div>
+                ) : nutritionError ? (
+                  <div className="text-red-600">{nutritionError}</div>
+                ) : nutrition ? (
+                  <div className="text-sm text-gray-700 space-y-1">
+                    <div><strong>Calories :</strong> {nutrition.calories} kcal</div>
+                    <div><strong>Protéines :</strong> {nutrition.protein} g</div>
+                    <div><strong>Glucides :</strong> {nutrition.carbs} g</div>
+                    <div><strong>Lipides :</strong> {nutrition.fat} g</div>
+                  </div>
+                ) : null}
               </div>
             )}
           </div>
