@@ -14,6 +14,7 @@ import EditWeightPage from './pages/EditWeightPage';
 import DishesPage from './pages/DishesPage';
 import CreateDishPage from './pages/CreateDishPage';
 import EditDishPage from './pages/EditDishPage';
+import ComposeDishPage from './pages/ComposeDishPage';
 import PrivateRoute from './components/routing/PrivateRoute';
 import './App.css';
 
@@ -124,6 +125,14 @@ function App() {
           element={
             <PrivateRoute>
               <CreateDishPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/dishes/:id/compose" 
+          element={
+            <PrivateRoute>
+              <ComposeDishPage />
             </PrivateRoute>
           } 
         />

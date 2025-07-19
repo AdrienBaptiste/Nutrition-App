@@ -35,11 +35,12 @@ class Contain
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['contain:read', 'dish:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['contain:read', 'contain:write'])]
+    #[Groups(['contain:read', 'contain:write', 'dish:read'])]
     private ?Food $food = null;
 
     #[ORM\ManyToOne]
@@ -48,7 +49,7 @@ class Contain
     private ?Dish $dish = null;
 
     #[ORM\Column]
-    #[Groups(['contain:read', 'contain:write'])]
+    #[Groups(['contain:read', 'contain:write', 'dish:read'])]
     private ?float $quantity = null;
 
     public function getId(): ?int

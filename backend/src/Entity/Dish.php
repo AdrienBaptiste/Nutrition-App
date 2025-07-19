@@ -37,6 +37,7 @@ class Dish
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['dish:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
@@ -54,14 +55,14 @@ class Dish
     /**
      * @var Collection<int, Contain>
      */
-    #[ORM\OneToMany(targetEntity: Contain::class, mappedBy: 'dish')]
+    #[ORM\OneToMany(targetEntity: Contain::class, mappedBy: 'dish', cascade: ['remove'])]
     #[Groups(['dish:read'])]
     private Collection $contains;
 
     /**
      * @var Collection<int, Constitute>
      */
-    #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'dish')]
+    #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'dish', cascade: ['remove'])]
     #[Groups(['dish:read'])]
     private Collection $constitutes;
 

@@ -168,11 +168,17 @@ const DishesPage: React.FC = () => {
                     <div className="border-t pt-3 mt-3">
                       <h4 className="text-sm font-medium text-gray-700 mb-2">Composition :</h4>
                       <ul className="text-xs text-gray-600 space-y-1">
-                        {dish.contains.slice(0, 3).map((contain, index) => (
-                          <li key={index}>
-                            • {contain.quantity}g de {contain.food.name}
-                          </li>
-                        ))}
+                        {dish.contains.slice(0, 3).map((contain) => {
+                          // Sécuriser l'accès à contain.food
+                          if (!contain.food || !contain.food.name) {
+                            return null;
+                          }
+                          return (
+                            <li key={`${contain.food.id}-${contain.quantity}`}>
+                              • {contain.quantity}g de {contain.food.name}
+                            </li>
+                          );
+                        }).filter(Boolean)}
                         {dish.contains.length > 3 && (
                           <li className="text-gray-500">... et {dish.contains.length - 3} autres</li>
                         )}
