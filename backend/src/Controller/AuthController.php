@@ -59,7 +59,7 @@ class AuthController extends AbstractController
         return $this->json(['message' => 'User registered successfully.'], Response::HTTP_CREATED);
     }
 
-    #[Route('/api/me', name: 'api_me', methods: ['GET'])]
+    #[Route('/api/v1/profile', name: 'api_profile', methods: ['GET'])]
     public function me(): JsonResponse
     {
         $user = $this->getUser();

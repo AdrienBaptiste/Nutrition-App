@@ -28,15 +28,33 @@ const RegisterForm: React.FC<{ onRegister?: () => void }> = ({ onRegister }) => 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+      
       if (!response.ok) {
-        setServerError(result.error?.[0] || result.error || "Erreur lors de l'inscription.");
+        // Gestion spécifique des codes d'erreur HTTP
+        if (response.status === 409) {
+          setServerError('Cet email est déjà utilisé. Veuillez en choisir un autre.');
+          return;
+        }
+        if (response.status === 400) {
+          const result = await response.json();
+          setServerError(result.error?.[0] || result.error || 'Données invalides. Vérifiez vos informations.');
+          return;
+        }
+        if (response.status === 422) {
+          const result = await response.json();
+          setServerError(result.error?.[0] || result.error || 'Données non valides. Vérifiez le format de vos informations.');
+          return;
+        }
+        // Autres erreurs serveur
+        setServerError(`Erreur serveur (${response.status}). Veuillez réessayer plus tard.`);
         return;
       }
+      
+      await response.json(); // Succès de l'inscription
       setSuccess(true);
       onRegister?.();
     } catch (err) {
-      setServerError(err instanceof Error ? err.message : 'Erreur réseau, veuillez réessayer.');
+      setServerError(err instanceof Error ? err.message : 'Erreur réseau. Vérifiez votre connexion et réessayez.');
     }
   };
 
