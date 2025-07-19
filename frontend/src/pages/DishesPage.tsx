@@ -6,7 +6,8 @@ import Card from '../components/atoms/Card';
 import { useAuth } from '../hooks/useAuth';
 
 interface Dish {
-  id: number;
+  id?: number;
+  '@id'?: string;
   name: string;
   description?: string;
   contains?: Array<{
@@ -16,6 +17,15 @@ interface Dish {
     };
     quantity: number;
   }>;
+}
+
+function getDishId(dish: Dish): number | undefined {
+  if (typeof dish.id === 'number') return dish.id;
+  if (typeof dish['@id'] === 'string') {
+    const m = dish['@id'].match(/\/dishes\/(\d+)$/);
+    return m ? parseInt(m[1], 10) : undefined;
+  }
+  return undefined;
 }
 
 const DishesPage: React.FC = () => {
@@ -141,7 +151,7 @@ const DishesPage: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dishes.map((dish) => (
-                <Card key={dish.id}>
+                <Card key={getDishId(dish) || dish.name}>
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="text-lg font-semibold text-gray-800">{dish.name}</h3>
                     <div className="flex space-x-2">
@@ -152,7 +162,10 @@ const DishesPage: React.FC = () => {
                         Modifier
                       </Link>
                       <button
-                        onClick={() => handleDelete(dish.id)}
+                        onClick={() => {
+                          const id = getDishId(dish);
+                          if (id !== undefined) handleDelete(id);
+                        }}
                         className="text-red-600 hover:text-red-800 text-sm"
                       >
                         Supprimer
