@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ConstituteNutritionCard from '../components/ConstituteNutritionCard';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import MainLayout from '../components/templates/MainLayout';
@@ -292,25 +293,25 @@ const ComposeMealPage: React.FC = () => {
     }
   };
 
-  // Calculer les apports nutritionnels totaux
-  const calculateTotalNutrition = () => {
-    return constitutes.reduce((total, constitute) => {
-      if (constitute.food && constitute.food_quantity) {
-        const factor = constitute.food_quantity / 100;
-        return {
-          calories: total.calories + (constitute.food.calories * factor),
-          protein: total.protein + (constitute.food.protein * factor),
-          carbs: total.carbs + (constitute.food.carbs * factor),
-          fat: total.fat + (constitute.food.fat * factor),
-        };
-      }
-      // Pour les plats, on pourrait calculer à partir de leur composition
-      // Pour l'instant, on retourne les valeurs actuelles
-      return total;
-    }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
-  };
+  // Récupérer les apports nutritionnels totaux du backend
+  const [nutrition, setNutrition] = useState<{calories: number, protein: number, carbs: number, fat: number} | null>(null);
+  const [nutritionLoading, setNutritionLoading] = useState(false);
+  const [nutritionError, setNutritionError] = useState<string | null>(null);
 
-  const totalNutrition = calculateTotalNutrition();
+  useEffect(() => {
+    if (!id || !jwt) return;
+    setNutritionLoading(true);
+    fetch(`http://localhost:8000/api/v1/meals/${id}/nutrition`, {
+      headers: { 'Authorization': `Bearer ${jwt}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Erreur lors du chargement du résumé nutritionnel');
+        return res.json();
+      })
+      .then(setNutrition)
+      .catch(() => setNutritionError('Erreur lors du chargement du résumé nutritionnel'))
+      .finally(() => setNutritionLoading(false));
+  }, [id, jwt, constitutes]);
 
   if (loading) {
     return (
@@ -385,43 +386,12 @@ const ComposeMealPage: React.FC = () => {
               ) : (
                 <div className="space-y-3">
                   {constitutes.map((constitute, index) => (
-                    <Card key={constitute.id || `constitute-${index}`}>
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            {constitute.food && (
-                              <>
-                                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Aliment</span>
-                                <h3 className="font-semibold text-gray-800">{constitute.food.name}</h3>
-                              </>
-                            )}
-                            {constitute.dish && (
-                              <>
-                                <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">Plat</span>
-                                <h3 className="font-semibold text-gray-800">{constitute.dish.name}</h3>
-                              </>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {constitute.food 
-                              ? `${constitute.food_quantity}g` 
-                              : `${constitute.dish_quantity} portion${(constitute.dish_quantity || 0) > 1 ? 's' : ''}`
-                            }
-                          </p>
-                          {constitute.food && constitute.food_quantity && (
-                            <p className="text-xs text-gray-500">
-                              {Math.round((constitute.food.calories * constitute.food_quantity) / 100)} kcal
-                            </p>
-                          )}
-                        </div>
-                        <button
-                          onClick={() => handleRemoveItem(constitute.id)}
-                          className="text-red-600 hover:text-red-800 text-sm"
-                        >
-                          Supprimer
-                        </button>
-                      </div>
-                    </Card>
+                    <ConstituteNutritionCard
+                      key={constitute.id || `constitute-${index}`}
+                      constitute={constitute}
+                      jwt={jwt || ''}
+                      onRemove={() => handleRemoveItem(constitute.id)}
+                    />
                   ))}
                 </div>
               )}
@@ -533,24 +503,30 @@ const ComposeMealPage: React.FC = () => {
                 <div>
                   <h2 className="text-xl font-semibold text-gray-800 mb-4">Résumé nutritionnel</h2>
                   <Card>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="font-medium">Calories:</span>
-                        <span>{Math.round(totalNutrition.calories)} kcal</span>
+                    {nutritionLoading ? (
+                      <div className="text-gray-500">Chargement du résumé nutritionnel...</div>
+                    ) : nutritionError ? (
+                      <div className="text-red-600">{nutritionError}</div>
+                    ) : nutrition ? (
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="font-medium">Calories:</span>
+                          <span>{nutrition.calories} kcal</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">Protéines:</span>
+                          <span>{nutrition.protein} g</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">Glucides:</span>
+                          <span>{nutrition.carbs} g</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">Lipides:</span>
+                          <span>{nutrition.fat} g</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium">Protéines:</span>
-                        <span>{Math.round(totalNutrition.protein)} g</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium">Glucides:</span>
-                        <span>{Math.round(totalNutrition.carbs)} g</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium">Lipides:</span>
-                        <span>{Math.round(totalNutrition.fat)} g</span>
-                      </div>
-                    </div>
+                    ) : null}
                   </Card>
                 </div>
               )}
