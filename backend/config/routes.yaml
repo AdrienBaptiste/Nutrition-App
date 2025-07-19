@@ -3,3 +3,14 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# --- Nutrition endpoints personnalisés ---
+dish_nutrition:
+    path: /api/v1/dishes/{id}/nutrition
+    controller: App\Controller\DishNutritionController
+    methods: [GET]
+
+meal_nutrition:
+    path: /api/v1/meals/{id}/nutrition
+    controller: App\Controller\MealNutritionController
+    methods: [GET]
