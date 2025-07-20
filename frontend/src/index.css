@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -9,7 +7,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #c7c7c7;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -58,15 +56,16 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #ffffff;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #505050;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Correction accessibilité : texte noir sur les champs de formulaire */
+input,
+textarea,
+select,
+span {
+  color: #222;
+  background-color: #fff;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #888;
+  opacity: 1;
 }

@@ -18,7 +18,15 @@ import EditDishPage from '../pages/EditDishPage';
 import ComposeDishPage from '../pages/ComposeDishPage';
 import ComposeMealPage from '../pages/ComposeMealPage';
 import CalendarPage from '../pages/CalendarPage';
+<<<<<<< HEAD
 import PrivateRoute from '../components/routing/PrivateRoute';
+=======
+import ProposeFoodPage from '../pages/ProposeFoodPage';
+import MyFoodProposalsPage from '../pages/MyFoodProposalsPage';
+import AdminFoodModerationPage from '../pages/AdminFoodModerationPage';
+import PrivateRoute from '../components/routing/PrivateRoute';
+import AdminRoute from '../components/routing/AdminRoute';
+>>>>>>> feat/proposition-aliment-et-validation
 
 const AppRouter: React.FC = () => (
   <Routes>
@@ -60,6 +68,34 @@ const AppRouter: React.FC = () => (
         </PrivateRoute>
       }
     />
+<<<<<<< HEAD
+=======
+    {/* Routes de modération des aliments */}
+    <Route 
+      path="/foods/propose" 
+      element={
+        <PrivateRoute>
+          <ProposeFoodPage />
+        </PrivateRoute>
+      }
+    />
+    <Route 
+      path="/foods/my-proposals" 
+      element={
+        <PrivateRoute>
+          <MyFoodProposalsPage />
+        </PrivateRoute>
+      }
+    />
+    <Route 
+      path="/admin/food-moderation" 
+      element={
+        <AdminRoute>
+          <AdminFoodModerationPage />
+        </AdminRoute>
+      }
+    />
+>>>>>>> feat/proposition-aliment-et-validation
     {/* Routes CRUD Repas */}
     <Route 
       path="/meals" 

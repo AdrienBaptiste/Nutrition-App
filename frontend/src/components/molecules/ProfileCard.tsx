@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../atoms/Card';
+import Title from '../atoms/Title';
 
 interface UserProfile {
   id: number;
@@ -15,7 +16,7 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
   return (
     <Card className="mb-8">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Mon Profil</h2>
+      <Title level={2} className="mb-4 text-gray-800">Mon Profil</Title>
       <div className="space-y-3">
         <div>
           <span className="font-medium text-gray-600">Nom :</span>

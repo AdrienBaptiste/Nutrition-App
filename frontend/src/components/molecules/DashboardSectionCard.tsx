@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../atoms/Card';
+import Title from '../atoms/Title';
 
 interface DashboardSectionCardProps {
   title: string;
@@ -25,7 +26,7 @@ const DashboardSectionCard: React.FC<DashboardSectionCardProps> = ({
 
   return (
     <Card>
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
+      <Title level={3} className="mb-2 text-gray-800">{title}</Title>
       <p className="text-gray-600 mb-4">{description}</p>
       <button
         onClick={onButtonClick}
