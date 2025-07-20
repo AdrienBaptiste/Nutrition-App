@@ -65,6 +65,10 @@ class Food
     #[Groups(['food:read', 'food:write', 'dish:read'])]
     private ?float $calories = null;
 
+    #[ORM\Column(length: 20, options: ['default' => 'active'])]
+    #[Groups(['food:read', 'food:write'])]
+    private string $status = 'active';
+
     #[ORM\ManyToOne(inversedBy: 'foods')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['food:read'])]
@@ -173,6 +177,18 @@ class Food
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
