@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ConstituteNutritionCard from '../components/ConstituteNutritionCard';
+import ConstituteNutritionCard from '../components/molecules/ConstituteNutritionCard';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import MainLayout from '../components/templates/MainLayout';
@@ -59,7 +59,7 @@ const ComposeMealPage: React.FC = () => {
   const { jwt } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  
+
   const [meal, setMeal] = useState<Meal | null>(null);
   const [constitutes, setConstitutes] = useState<Constitute[]>([]);
   const [foods, setFoods] = useState<Food[]>([]);
@@ -89,7 +89,7 @@ const ComposeMealPage: React.FC = () => {
       try {
         // Récupérer les informations du repas
         const mealResponse = await fetch(`http://localhost:8000/api/v1/meals/${id}`, {
-          headers: { 'Authorization': `Bearer ${jwt}` },
+          headers: { Authorization: `Bearer ${jwt}` },
         });
 
         if (!mealResponse.ok) {
@@ -101,88 +101,111 @@ const ComposeMealPage: React.FC = () => {
 
         // Récupérer la composition du repas (constitutes)
         const constitutesResponse = await fetch(`http://localhost:8000/api/v1/constitutes`, {
-          headers: { 'Authorization': `Bearer ${jwt}` },
+          headers: { Authorization: `Bearer ${jwt}` },
         });
 
         if (constitutesResponse.ok) {
           const constitutesData = await constitutesResponse.json();
-          const mealConstitutes = Array.isArray(constitutesData) ? constitutesData : (constitutesData.member || []);
-          
+          const mealConstitutes = Array.isArray(constitutesData)
+            ? constitutesData
+            : constitutesData.member || [];
+
           // Filtrer pour ne garder que les constitutes de ce repas et récupérer les données complètes
-          const filteredConstitutes = mealConstitutes.filter((constitute: { meal: string | { id: number }, food?: string | { id: number }, dish?: string | { id: number }, food_quantity?: number, dish_quantity?: number, id: number }) => {
-            const mealIri = constitute.meal;
-            if (typeof mealIri === 'string') {
-              const mealIdMatch = mealIri.match(/\/meals\/(\d+)$/);
-              const mealId = mealIdMatch ? parseInt(mealIdMatch[1]) : null;
-              return mealId === parseInt(id);
+          const filteredConstitutes = mealConstitutes.filter(
+            (constitute: {
+              meal: string | { id: number };
+              food?: string | { id: number };
+              dish?: string | { id: number };
+              food_quantity?: number;
+              dish_quantity?: number;
+              id: number;
+            }) => {
+              const mealIri = constitute.meal;
+              if (typeof mealIri === 'string') {
+                const mealIdMatch = mealIri.match(/\/meals\/(\d+)$/);
+                const mealId = mealIdMatch ? parseInt(mealIdMatch[1]) : null;
+                return mealId === parseInt(id);
+              }
+              return mealIri?.id === parseInt(id);
             }
-            return mealIri?.id === parseInt(id);
-          });
+          );
 
           // Récupérer les données complètes des aliments et plats
           const constitutesWithData = await Promise.all(
-            filteredConstitutes.map(async (constitute: { '@id'?: string, id?: number, meal: string | { id: number }, food?: string | { id: number }, dish?: string | { id: number }, food_quantity?: number, dish_quantity?: number }) => {
-              // Extraire l'ID depuis @id (format API Platform JSON-LD)
-              let id = constitute.id;
-              if (!id && constitute['@id']) {
-                const idMatch = constitute['@id'].match(/\/constitutes\/(\d+)$/);
-                id = idMatch ? parseInt(idMatch[1]) : undefined;
-              }
-              
-              const result = { ...constitute, id };
-              
-              // Si c'est un aliment
-              if (constitute.food && typeof constitute.food === 'string') {
-                const foodResponse = await fetch(`http://localhost:8000${constitute.food}`, {
-                  headers: { 'Authorization': `Bearer ${jwt}` },
-                });
-                if (foodResponse.ok) {
-                  result.food = await foodResponse.json();
+            filteredConstitutes.map(
+              async (constitute: {
+                '@id'?: string;
+                id?: number;
+                meal: string | { id: number };
+                food?: string | { id: number };
+                dish?: string | { id: number };
+                food_quantity?: number;
+                dish_quantity?: number;
+              }) => {
+                // Extraire l'ID depuis @id (format API Platform JSON-LD)
+                let id = constitute.id;
+                if (!id && constitute['@id']) {
+                  const idMatch = constitute['@id'].match(/\/constitutes\/(\d+)$/);
+                  id = idMatch ? parseInt(idMatch[1]) : undefined;
                 }
-              }
-              
-              // Si c'est un plat
-              if (constitute.dish && typeof constitute.dish === 'string') {
-                const dishResponse = await fetch(`http://localhost:8000${constitute.dish}`, {
-                  headers: { 'Authorization': `Bearer ${jwt}` },
-                });
-                if (dishResponse.ok) {
-                  result.dish = await dishResponse.json();
+
+                const result = { ...constitute, id };
+
+                // Si c'est un aliment
+                if (constitute.food && typeof constitute.food === 'string') {
+                  const foodResponse = await fetch(`http://localhost:8000${constitute.food}`, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                  });
+                  if (foodResponse.ok) {
+                    result.food = await foodResponse.json();
+                  }
                 }
+
+                // Si c'est un plat
+                if (constitute.dish && typeof constitute.dish === 'string') {
+                  const dishResponse = await fetch(`http://localhost:8000${constitute.dish}`, {
+                    headers: { Authorization: `Bearer ${jwt}` },
+                  });
+                  if (dishResponse.ok) {
+                    result.dish = await dishResponse.json();
+                  }
+                }
+
+                return result;
               }
-              
-              return result;
-            })
+            )
           );
-          
+
           console.log('Constitutes chargés:', constitutesWithData);
           console.log('Premier constitute détaillé:', constitutesWithData[0]);
-          console.log('IDs des constitutes:', constitutesWithData.map(c => ({ id: c.id, keys: Object.keys(c) })));
+          console.log(
+            'IDs des constitutes:',
+            constitutesWithData.map((c) => ({ id: c.id, keys: Object.keys(c) }))
+          );
           setConstitutes(constitutesWithData);
         }
 
         // Récupérer la liste des aliments disponibles
         const foodsResponse = await fetch(`http://localhost:8000/api/v1/foods`, {
-          headers: { 'Authorization': `Bearer ${jwt}` },
+          headers: { Authorization: `Bearer ${jwt}` },
         });
 
         if (foodsResponse.ok) {
           const foodsData = await foodsResponse.json();
-          const foodsList = Array.isArray(foodsData) ? foodsData : (foodsData.member || []);
+          const foodsList = Array.isArray(foodsData) ? foodsData : foodsData.member || [];
           setFoods(foodsList);
         }
 
         // Récupérer la liste des plats disponibles
         const dishesResponse = await fetch(`http://localhost:8000/api/v1/dishes`, {
-          headers: { 'Authorization': `Bearer ${jwt}` },
+          headers: { Authorization: `Bearer ${jwt}` },
         });
 
         if (dishesResponse.ok) {
           const dishesData = await dishesResponse.json();
-          const dishesList = Array.isArray(dishesData) ? dishesData : (dishesData.member || []);
+          const dishesList = Array.isArray(dishesData) ? dishesData : dishesData.member || [];
           setDishes(dishesList);
         }
-
       } catch {
         setError('Erreur lors du chargement des données');
       } finally {
@@ -195,7 +218,13 @@ const ComposeMealPage: React.FC = () => {
 
   const onAddItem = async (data: AddItemFormInputs) => {
     try {
-      const body: { meal: string, food?: string, dish?: string, food_quantity?: number, dish_quantity?: number } = {
+      const body: {
+        meal: string;
+        food?: string;
+        dish?: string;
+        food_quantity?: number;
+        dish_quantity?: number;
+      } = {
         meal: `/api/v1/meals/${id}`,
       };
 
@@ -210,54 +239,60 @@ const ComposeMealPage: React.FC = () => {
       const response = await fetch('http://localhost:8000/api/v1/constitutes', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${jwt}`,
+          Authorization: `Bearer ${jwt}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'ajout de l\'élément');
+        throw new Error("Erreur lors de l'ajout de l'élément");
       }
 
       const newConstitute = await response.json();
-      
+
       // Trouver l'aliment ou le plat correspondant pour l'affichage
       if (data.itemType === 'food') {
-        const food = foods.find(f => f.id === data.itemId);
+        const food = foods.find((f) => f.id === data.itemId);
         if (food) {
-          setConstitutes([...constitutes, { 
-            ...newConstitute, 
-            food, 
-            food_quantity: data.quantity 
-          }]);
+          setConstitutes([
+            ...constitutes,
+            {
+              ...newConstitute,
+              food,
+              food_quantity: data.quantity,
+            },
+          ]);
         }
       } else {
-        const dish = dishes.find(d => d.id === data.itemId);
+        const dish = dishes.find((d) => d.id === data.itemId);
         if (dish) {
-          setConstitutes([...constitutes, { 
-            ...newConstitute, 
-            dish, 
-            dish_quantity: data.quantity 
-          }]);
+          setConstitutes([
+            ...constitutes,
+            {
+              ...newConstitute,
+              dish,
+              dish_quantity: data.quantity,
+            },
+          ]);
         }
       }
-      
+
       reset();
       setAddingItem(false);
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de l\'ajout de l\'élément');
+      alert("Erreur lors de l'ajout de l'élément");
     }
   };
 
   const handleRemoveItem = async (constituteId: number) => {
     console.log('Tentative de suppression avec ID:', constituteId);
-    
+
     // Debug détaillé si ID undefined
     if (constituteId === undefined) {
       console.error('ID undefined détecté ! Constitutes actuels:', constitutes);
-      const problematicConstitute = constitutes.find(c => c.id === undefined);
+      const problematicConstitute = constitutes.find((c) => c.id === undefined);
       if (problematicConstitute) {
         console.error('Constitute problématique:', problematicConstitute);
         console.error('Clés disponibles:', Object.keys(problematicConstitute));
@@ -265,17 +300,17 @@ const ComposeMealPage: React.FC = () => {
       alert('Erreur: ID manquant pour la suppression');
       return;
     }
-    
+
     if (!confirm('Supprimer cet élément du repas ?')) return;
 
     try {
       const response = await fetch(`http://localhost:8000/api/v1/constitutes/${constituteId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${jwt}` },
+        headers: { Authorization: `Bearer ${jwt}` },
       });
 
       if (response.ok) {
-        setConstitutes(constitutes.filter(c => c.id !== constituteId));
+        setConstitutes(constitutes.filter((c) => c.id !== constituteId));
       } else {
         alert('Erreur lors de la suppression');
       }
@@ -290,7 +325,7 @@ const ComposeMealPage: React.FC = () => {
     try {
       const response = await fetch(`http://localhost:8000/api/v1/meals/${id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${jwt}` },
+        headers: { Authorization: `Bearer ${jwt}` },
       });
 
       if (response.ok) {
@@ -304,7 +339,12 @@ const ComposeMealPage: React.FC = () => {
   };
 
   // Récupérer les apports nutritionnels totaux du backend
-  const [nutrition, setNutrition] = useState<{calories: number, protein: number, carbs: number, fat: number} | null>(null);
+  const [nutrition, setNutrition] = useState<{
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  } | null>(null);
   const [nutritionLoading, setNutritionLoading] = useState(false);
   const [nutritionError, setNutritionError] = useState<string | null>(null);
 
@@ -312,9 +352,9 @@ const ComposeMealPage: React.FC = () => {
     if (!id || !jwt) return;
     setNutritionLoading(true);
     fetch(`http://localhost:8000/api/v1/meals/${id}/nutrition`, {
-      headers: { 'Authorization': `Bearer ${jwt}` }
+      headers: { Authorization: `Bearer ${jwt}` },
     })
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error('Erreur lors du chargement du résumé nutritionnel');
         return res.json();
       })
@@ -360,10 +400,10 @@ const ComposeMealPage: React.FC = () => {
           <div className="flex justify-between items-start mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-800 mb-2">Composition : {meal.name}</h1>
-              {meal.description && (
-                <p className="text-gray-600 mb-2">{meal.description}</p>
-              )}
-              <p className="text-sm text-gray-500">Date : {new Date(meal.date).toLocaleDateString()}</p>
+              {meal.description && <p className="text-gray-600 mb-2">{meal.description}</p>}
+              <p className="text-sm text-gray-500">
+                Date : {new Date(meal.date).toLocaleDateString()}
+              </p>
             </div>
             <div className="flex space-x-3">
               <Link
@@ -385,7 +425,7 @@ const ComposeMealPage: React.FC = () => {
             {/* Composition actuelle */}
             <div className="lg:col-span-2">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Composition actuelle</h2>
-              
+
               {constitutes.length === 0 ? (
                 <Card>
                   <div className="text-center py-8 text-gray-500">
@@ -415,14 +455,12 @@ const ComposeMealPage: React.FC = () => {
               {/* Ajouter un élément */}
               <div>
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Ajouter un élément</h2>
-                
+
                 {!addingItem ? (
                   <Card>
                     <div className="text-center py-8">
                       <p className="text-gray-600 mb-4">Ajoutez des aliments ou des plats</p>
-                      <Button onClick={() => setAddingItem(true)}>
-                        Ajouter un élément
-                      </Button>
+                      <Button onClick={() => setAddingItem(true)}>Ajouter un élément</Button>
                     </div>
                   </Card>
                 ) : (
@@ -451,14 +489,14 @@ const ComposeMealPage: React.FC = () => {
                             {itemType === 'food' ? 'Aliment' : 'Plat'}
                           </label>
                           <select
-                            {...register('itemId', { 
+                            {...register('itemId', {
                               required: `Sélectionnez un ${itemType === 'food' ? 'aliment' : 'plat'}`,
-                              valueAsNumber: true 
+                              valueAsNumber: true,
                             })}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           >
                             <option value="">Choisir...</option>
-                            {itemType === 'food' 
+                            {itemType === 'food'
                               ? foods.map((food) => (
                                   <option key={food.id} value={food.id}>
                                     {food.name} ({food.calories} kcal/100g)
@@ -468,8 +506,7 @@ const ComposeMealPage: React.FC = () => {
                                   <option key={dish.id} value={dish.id}>
                                     {dish.name}
                                   </option>
-                                ))
-                            }
+                                ))}
                           </select>
                           {errors.itemId && (
                             <p className="text-red-600 text-sm mt-1">{errors.itemId.message}</p>
@@ -483,10 +520,13 @@ const ComposeMealPage: React.FC = () => {
                         min="0.1"
                         step="0.1"
                         placeholder={itemType === 'food' ? 'Ex: 150.5' : 'Ex: 1.5'}
-                        {...register('quantity', { 
+                        {...register('quantity', {
                           required: 'La quantité est requise',
-                          min: { value: 0.1, message: itemType === 'food' ? 'Minimum 0.1g' : 'Minimum 0.1 portion' },
-                          valueAsNumber: true
+                          min: {
+                            value: 0.1,
+                            message: itemType === 'food' ? 'Minimum 0.1g' : 'Minimum 0.1 portion',
+                          },
+                          valueAsNumber: true,
                         })}
                         error={errors.quantity?.message}
                       />
