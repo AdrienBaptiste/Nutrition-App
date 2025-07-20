@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../components/templates/MainLayout';
 import LoadingSpinner from '../components/atoms/LoadingSpinner';
+import Title from '../components/atoms/Title';
 import DashboardContent from '../components/organisms/DashboardContent';
 import { useAuth } from '../hooks/useAuth';
 
@@ -70,7 +71,7 @@ const DashboardPage: React.FC = () => {
       <MainLayout>
         <div className="min-h-[80vh] flex items-center justify-center">
           <div className="text-red-600 text-center">
-            <h2 className="text-xl font-semibold mb-2">Erreur</h2>
+            <Title level={2} className="mb-2">Erreur</Title>
             <p>{error}</p>
           </div>
         </div>

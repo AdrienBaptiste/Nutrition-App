@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MainLayout from '../components/templates/MainLayout';
 import LoadingSpinner from '../components/atoms/LoadingSpinner';
 import Card from '../components/atoms/Card';
+import Title from '../components/atoms/Title';
+import ConfirmModal from '../components/molecules/ConfirmModal';
 import { useAuth } from '../hooks/useAuth';
 
 interface Food {
@@ -16,10 +18,22 @@ interface Food {
 }
 
 const FoodsPage: React.FC = () => {
-  const { jwt } = useAuth();
+  const { jwt, user } = useAuth();
   const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
+  const navigate = useNavigate();
+
+  // Admin detection (same as elsewhere in project)
+  const isAdmin = user && (
+    user.email === 'admin@nutrition.app' ||
+    (user.email && user.email.includes('admin')) ||
+    (user.name && user.name.toLowerCase().includes('admin')) ||
+    (user.roles && user.roles.includes('ROLE_ADMIN'))
+  );
+
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -60,30 +74,11 @@ const FoodsPage: React.FC = () => {
     };
 
     fetchFoods();
+    // setError, setFoods, setLoading are stable from useState
   }, [jwt]);
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet aliment ?')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:8000/api/v1/foods/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${jwt}`,
-        },
-      });
-
-      if (response.ok) {
-        setFoods(foods.filter(food => food.id !== id));
-      } else {
-        alert('Erreur lors de la suppression');
-      }
-    } catch {
-      alert('Erreur réseau lors de la suppression');
-    }
-  };
+  // Les aliments sont maintenant communs, pas de suppression individuelle
+  // La modération se fait via la page admin
 
   if (loading) {
     return (
@@ -113,25 +108,25 @@ const FoodsPage: React.FC = () => {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Mes Aliments</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Base d'Aliments</h1>
             <Link
-              to="/foods/new"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+              to="/foods/propose"
+              className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
             >
-              Nouvel Aliment
+              Proposer un Aliment
             </Link>
           </div>
 
           {foods.length === 0 ? (
             <Card>
               <div className="text-center py-8">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucun aliment</h3>
-                <p className="text-gray-600 mb-4">Vous n'avez pas encore ajouté d'aliments.</p>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucun aliment disponible</h3>
+                <p className="text-gray-600 mb-4">La base d'aliments est vide ou en cours de chargement.</p>
                 <Link
-                  to="/foods/new"
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                  to="/foods/propose"
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
                 >
-                  Ajouter votre premier aliment
+                  Proposer un aliment
                 </Link>
               </div>
             </Card>
@@ -139,22 +134,28 @@ const FoodsPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {foods.map((food) => (
                 <Card key={food.id}>
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-lg font-semibold text-gray-800">{food.name}</h3>
-                    <div className="flex space-x-2">
-                      <Link
-                        to={`/foods/${food.id}/edit`}
-                        className="text-blue-600 hover:text-blue-800 text-sm"
+                  {/* Admin actions */}
+                  {isAdmin && (
+                    <div className="flex justify-end gap-2 mb-2">
+                      <button
+                        className="px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700 transition"
+                        onClick={() => navigate(`/foods/${food.id}/edit`)}
+                        title="Modifier"
                       >
                         Modifier
-                      </Link>
+                      </button>
                       <button
-                        onClick={() => handleDelete(food.id)}
-                        className="text-red-600 hover:text-red-800 text-sm"
+                        className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700 transition"
+                        onClick={() => setPendingDeleteId(food.id)}
+                        title="Supprimer"
+                        disabled={actionLoading === food.id}
                       >
-                        Supprimer
+                        {actionLoading === food.id ? 'Suppression...' : 'Supprimer'}
                       </button>
                     </div>
+                  )}
+                  <div className="mb-3">
+                    <Title level={3} className="text-gray-800">{food.name}</Title>
                   </div>
                   
                   {food.description && (
@@ -185,8 +186,42 @@ const FoodsPage: React.FC = () => {
           )}
         </div>
       </div>
-    </MainLayout>
-  );
+    {/* ConfirmModal for delete */}
+    {isAdmin && (
+      <>
+        {pendingDeleteId !== null && (
+          <ConfirmModal
+            open={true}
+            onCancel={() => setPendingDeleteId(null)}
+            onConfirm={async () => {
+              setActionLoading(pendingDeleteId);
+              try {
+                const response = await fetch(`http://localhost:8000/api/v1/foods/${pendingDeleteId}`, {
+                  method: 'DELETE',
+                  headers: { 'Authorization': `Bearer ${jwt}` },
+                });
+                if (response.ok) {
+                  setFoods((prev) => prev.filter(f => f.id !== pendingDeleteId));
+                  setPendingDeleteId(null);
+                } else {
+                  alert('Erreur lors de la suppression.');
+                }
+              } catch {
+                alert('Erreur réseau lors de la suppression.');
+              } finally {
+                setActionLoading(null);
+              }
+            }}
+            confirmLabel="Oui, supprimer"
+            cancelLabel="Annuler"
+          >
+            Voulez-vous vraiment supprimer cet aliment ? Cette action est irréversible.
+          </ConfirmModal>
+        )}
+      </>
+    )}
+  </MainLayout>
+);
 };
 
 export default FoodsPage;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import AppLink from '../atoms/AppLink';
+import { useAuth } from '../../hooks/useAuth';
 
 interface NavbarProps {
   isAuthenticated: boolean;
@@ -9,6 +10,14 @@ interface NavbarProps {
 
 const Navbar: React.FC<Omit<NavbarProps, 'onLogout'>> = ({ isAuthenticated }) => {
   const location = useLocation();
+  const { user } = useAuth();
+
+  // Vérification du rôle admin
+  const isAdmin = 
+    user?.email === 'admin@nutrition.app' || 
+    user?.email?.includes('admin') ||
+    user?.name?.toLowerCase().includes('admin') ||
+    user?.roles?.includes('ROLE_ADMIN');
 
   return (
     <nav className="flex items-center justify-around w-full h-[100px] gap-8">
@@ -20,11 +29,23 @@ const Navbar: React.FC<Omit<NavbarProps, 'onLogout'>> = ({ isAuthenticated }) =>
           <AppLink to="/dashboard" active={location.pathname.startsWith('/dashboard')}>
             Dashboard
           </AppLink>
-          <AppLink to="/foods" active={location.pathname.startsWith('/foods')}>
+          <AppLink to="/foods" active={location.pathname.startsWith('/foods') && !location.pathname.includes('/propose') && !location.pathname.includes('/my-proposals')}>
             Aliments
           </AppLink>
+          <AppLink to="/foods/propose" active={location.pathname === '/foods/propose'}>
+            Proposer
+          </AppLink>
+          {/* Masquer "Mes propositions" pour les admins car leurs aliments sont auto-validés */}
+          {!isAdmin && (
+            <AppLink to="/foods/my-proposals" active={location.pathname === '/foods/my-proposals'}>
+              Mes propositions
+            </AppLink>
+          )}
           <AppLink to="/meals" active={location.pathname.startsWith('/meals')}>
             Repas
+          </AppLink>
+          <AppLink to="/calendar" active={location.pathname === '/calendar'}>
+            Calendrier
           </AppLink>
           {/* <Link to="/profile" className={linkBase}>Profil</Link> */}
         </>

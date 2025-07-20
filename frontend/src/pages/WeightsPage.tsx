@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import MainLayout from '../components/templates/MainLayout';
 import LoadingSpinner from '../components/atoms/LoadingSpinner';
 import Card from '../components/atoms/Card';
+import Title from '../components/atoms/Title';
 import { useAuth } from '../hooks/useAuth';
+import ConfirmModal from '../components/molecules/ConfirmModal';
 
 interface Weight {
   id: number;
@@ -16,6 +18,8 @@ const WeightsPage: React.FC = () => {
   const [weights, setWeights] = useState<Weight[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchWeights = async () => {
@@ -58,27 +62,35 @@ const WeightsPage: React.FC = () => {
     fetchWeights();
   }, [jwt]);
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette pesée ?')) {
-      return;
-    }
+  const handleDelete = (id: number) => {
+    setPendingDeleteId(id);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    setDeleting(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/weights/${id}`, {
+      const response = await fetch(`http://localhost:8000/api/v1/weights/${pendingDeleteId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${jwt}`,
         },
       });
-
       if (response.ok) {
-        setWeights(weights.filter(weight => weight.id !== id));
+        setWeights(weights.filter(weight => weight.id !== pendingDeleteId));
+        setPendingDeleteId(null);
       } else {
         alert('Erreur lors de la suppression');
       }
     } catch {
       alert('Erreur réseau lors de la suppression');
+    } finally {
+      setDeleting(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setPendingDeleteId(null);
   };
 
   const formatDate = (dateString: string) => {
@@ -127,6 +139,17 @@ const WeightsPage: React.FC = () => {
 
   return (
     <MainLayout>
+      <ConfirmModal
+        open={pendingDeleteId !== null}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      >
+        <div className="mb-2 font-semibold text-lg text-gray-800">Confirmer la suppression</div>
+        <div className="text-gray-700">
+          Êtes-vous sûr de vouloir supprimer cette pesée ?<br />
+          Cette action est <span className="text-red-600 font-bold">irréversible</span>.
+        </div>
+      </ConfirmModal>
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
@@ -142,7 +165,7 @@ const WeightsPage: React.FC = () => {
           {weights.length === 0 ? (
             <Card>
               <div className="text-center py-8">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">Aucune pesée</h3>
+                <Title level={3} className="mb-2 text-gray-800">Aucune pesée</Title>
                 <p className="text-gray-600 mb-4">Commencez à suivre votre poids en enregistrant votre première pesée.</p>
                 <Link
                   to="/weights/new"

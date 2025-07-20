@@ -18,7 +18,11 @@ import EditDishPage from '../pages/EditDishPage';
 import ComposeDishPage from '../pages/ComposeDishPage';
 import ComposeMealPage from '../pages/ComposeMealPage';
 import CalendarPage from '../pages/CalendarPage';
+import ProposeFoodPage from '../pages/ProposeFoodPage';
+import MyFoodProposalsPage from '../pages/MyFoodProposalsPage';
+import AdminFoodModerationPage from '../pages/AdminFoodModerationPage';
 import PrivateRoute from '../components/routing/PrivateRoute';
+import AdminRoute from '../components/routing/AdminRoute';
 
 const AppRouter: React.FC = () => (
   <Routes>
@@ -58,6 +62,31 @@ const AppRouter: React.FC = () => (
         <PrivateRoute>
           <EditFoodPage />
         </PrivateRoute>
+      }
+    />
+    {/* Routes de modération des aliments */}
+    <Route 
+      path="/foods/propose" 
+      element={
+        <PrivateRoute>
+          <ProposeFoodPage />
+        </PrivateRoute>
+      }
+    />
+    <Route 
+      path="/foods/my-proposals" 
+      element={
+        <PrivateRoute>
+          <MyFoodProposalsPage />
+        </PrivateRoute>
+      }
+    />
+    <Route 
+      path="/admin/food-moderation" 
+      element={
+        <AdminRoute>
+          <AdminFoodModerationPage />
+        </AdminRoute>
       }
     />
     {/* Routes CRUD Repas */}

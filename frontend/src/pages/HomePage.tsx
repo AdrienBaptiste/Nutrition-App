@@ -1,5 +1,6 @@
 import React from 'react';
 import MainLayout from '../components/templates/MainLayout';
+import Title from '../components/atoms/Title';
 import AppLink from '../components/atoms/AppLink';
 import Card from '../components/atoms/Card';
 
@@ -10,9 +11,9 @@ const HomePage: React.FC = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Hero Section */}
           <div className="mb-12">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            <Title level={1} className="mb-4 text-gray-800">
               Bienvenue sur Nutrition App
-            </h1>
+            </Title>
             <p className="text-xl text-gray-600 mb-8">
               Suivez votre alimentation, gérez vos repas et atteignez vos objectifs nutritionnels
             </p>
@@ -58,9 +59,9 @@ const HomePage: React.FC = () => {
 
           {/* CTA Section */}
           <div className="mt-12 bg-blue-50 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            <Title level={2} className="mb-4 text-gray-800">
               Prêt à commencer ?
-            </h2>
+            </Title>
             <p className="text-gray-600 mb-6">
               Créez votre compte gratuitement et commencez à suivre votre nutrition dès aujourd'hui
             </p>
