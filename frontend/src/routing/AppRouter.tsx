@@ -18,15 +18,11 @@ import EditDishPage from '../pages/EditDishPage';
 import ComposeDishPage from '../pages/ComposeDishPage';
 import ComposeMealPage from '../pages/ComposeMealPage';
 import CalendarPage from '../pages/CalendarPage';
-<<<<<<< HEAD
-import PrivateRoute from '../components/routing/PrivateRoute';
-=======
 import ProposeFoodPage from '../pages/ProposeFoodPage';
 import MyFoodProposalsPage from '../pages/MyFoodProposalsPage';
 import AdminFoodModerationPage from '../pages/AdminFoodModerationPage';
 import PrivateRoute from '../components/routing/PrivateRoute';
 import AdminRoute from '../components/routing/AdminRoute';
->>>>>>> feat/proposition-aliment-et-validation
 
 const AppRouter: React.FC = () => (
   <Routes>
@@ -35,8 +31,8 @@ const AppRouter: React.FC = () => (
     {/* Page d'authentification */}
     <Route path="/auth" element={<AuthPage />} />
     {/* Pages privées protégées */}
-    <Route 
-      path="/dashboard" 
+    <Route
+      path="/dashboard"
       element={
         <PrivateRoute>
           <DashboardPage />
@@ -44,77 +40,74 @@ const AppRouter: React.FC = () => (
       }
     />
     {/* Pages CRUD Aliments */}
-    <Route 
-      path="/foods" 
+    <Route
+      path="/foods"
       element={
         <PrivateRoute>
           <FoodsPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/foods/new" 
+    <Route
+      path="/foods/new"
       element={
         <PrivateRoute>
           <CreateFoodPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/foods/:id/edit" 
+    <Route
+      path="/foods/:id/edit"
       element={
         <PrivateRoute>
           <EditFoodPage />
         </PrivateRoute>
       }
     />
-<<<<<<< HEAD
-=======
     {/* Routes de modération des aliments */}
-    <Route 
-      path="/foods/propose" 
+    <Route
+      path="/foods/propose"
       element={
         <PrivateRoute>
           <ProposeFoodPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/foods/my-proposals" 
+    <Route
+      path="/foods/my-proposals"
       element={
         <PrivateRoute>
           <MyFoodProposalsPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/admin/food-moderation" 
+    <Route
+      path="/admin/food-moderation"
       element={
         <AdminRoute>
           <AdminFoodModerationPage />
         </AdminRoute>
       }
     />
->>>>>>> feat/proposition-aliment-et-validation
     {/* Routes CRUD Repas */}
-    <Route 
-      path="/meals" 
+    <Route
+      path="/meals"
       element={
         <PrivateRoute>
           <MealsPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/meals/new" 
+    <Route
+      path="/meals/new"
       element={
         <PrivateRoute>
           <CreateMealPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/meals/:id/edit" 
+    <Route
+      path="/meals/:id/edit"
       element={
         <PrivateRoute>
           <EditMealPage />
@@ -122,24 +115,24 @@ const AppRouter: React.FC = () => (
       }
     />
     {/* Routes CRUD Poids */}
-    <Route 
-      path="/weights" 
+    <Route
+      path="/weights"
       element={
         <PrivateRoute>
           <WeightsPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/weights/new" 
+    <Route
+      path="/weights/new"
       element={
         <PrivateRoute>
           <CreateWeightPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/weights/:id/edit" 
+    <Route
+      path="/weights/:id/edit"
       element={
         <PrivateRoute>
           <EditWeightPage />
@@ -147,40 +140,40 @@ const AppRouter: React.FC = () => (
       }
     />
     {/* Routes CRUD Plats */}
-    <Route 
-      path="/dishes" 
+    <Route
+      path="/dishes"
       element={
         <PrivateRoute>
           <DishesPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/dishes/new" 
+    <Route
+      path="/dishes/new"
       element={
         <PrivateRoute>
           <CreateDishPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/dishes/:id/edit" 
+    <Route
+      path="/dishes/:id/edit"
       element={
         <PrivateRoute>
           <EditDishPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/dishes/:id/compose" 
+    <Route
+      path="/dishes/:id/compose"
       element={
         <PrivateRoute>
           <ComposeDishPage />
         </PrivateRoute>
       }
     />
-    <Route 
-      path="/meals/:id/compose" 
+    <Route
+      path="/meals/:id/compose"
       element={
         <PrivateRoute>
           <ComposeMealPage />
@@ -188,7 +181,7 @@ const AppRouter: React.FC = () => (
       }
     />
     {/* Calendrier */}
-    <Route 
+    <Route
       path="/calendar"
       element={
         <PrivateRoute>
