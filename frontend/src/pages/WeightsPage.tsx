@@ -6,6 +6,7 @@ import Card from '../components/atoms/Card';
 import Title from '../components/atoms/Title';
 import { useAuth } from '../hooks/useAuth';
 import ConfirmModal from '../components/molecules/ConfirmModal';
+import WeightChart from '../components/molecules/WeightChart';
 
 interface Weight {
   id: number;
@@ -161,6 +162,9 @@ const WeightsPage: React.FC = () => {
               Nouvelle Pesée
             </Link>
           </div>
+
+          {/* Affichage du graphique d'évolution du poids */}
+          <WeightChart data={weights.map(({ date, value }) => ({ date, value }))} />
 
           {weights.length === 0 ? (
             <Card>
