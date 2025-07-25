@@ -439,10 +439,10 @@ const ComposeDishPage: React.FC = () => {
                   <div className="text-red-600">{nutritionError}</div>
                 ) : nutrition ? (
                   <div className="text-sm text-gray-700 space-y-1">
-                    <div><strong>Calories :</strong> {nutrition.calories} kcal</div>
-                    <div><strong>Protéines :</strong> {nutrition.protein} g</div>
-                    <div><strong>Glucides :</strong> {nutrition.carbs} g</div>
-                    <div><strong>Lipides :</strong> {nutrition.fat} g</div>
+                    <div><strong>Calories :</strong> {Number(nutrition.calories).toFixed(0)} kcal</div>
+                    <div><strong>Protéines :</strong> {Number(nutrition.protein).toFixed(2)} g</div>
+                    <div><strong>Glucides :</strong> {Number(nutrition.carbs).toFixed(2)} g</div>
+                    <div><strong>Lipides :</strong> {Number(nutrition.fat).toFixed(2)} g</div>
                   </div>
                 ) : null}
               </div>

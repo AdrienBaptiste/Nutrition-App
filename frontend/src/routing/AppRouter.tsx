@@ -23,6 +23,7 @@ import MyFoodProposalsPage from '../pages/MyFoodProposalsPage';
 import AdminFoodModerationPage from '../pages/AdminFoodModerationPage';
 import PrivateRoute from '../components/routing/PrivateRoute';
 import AdminRoute from '../components/routing/AdminRoute';
+import CalculatorPage from '../pages/CalculatorPage';
 
 const AppRouter: React.FC = () => (
   <Routes>
@@ -177,6 +178,15 @@ const AppRouter: React.FC = () => (
       element={
         <PrivateRoute>
           <ComposeMealPage />
+        </PrivateRoute>
+      }
+    />
+    {/* Calculateur nutritionnel */}
+    <Route
+      path="/calculator"
+      element={
+        <PrivateRoute>
+          <CalculatorPage />
         </PrivateRoute>
       }
     />
