@@ -20,7 +20,6 @@ const WeightsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchWeights = async () => {
@@ -69,7 +68,6 @@ const WeightsPage: React.FC = () => {
 
   const handleConfirmDelete = async () => {
     if (!pendingDeleteId) return;
-    setDeleting(true);
     try {
       const response = await fetch(`http://localhost:8000/api/v1/weights/${pendingDeleteId}`, {
         method: 'DELETE',
@@ -86,7 +84,6 @@ const WeightsPage: React.FC = () => {
     } catch {
       alert('Erreur réseau lors de la suppression');
     } finally {
-      setDeleting(false);
     }
   };
 
