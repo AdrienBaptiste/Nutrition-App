@@ -22,13 +22,24 @@ class AuthController extends AbstractController
         ValidatorInterface $validator
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
-        $email = $data['email'] ?? null;
-        $password = $data['password'] ?? null;
-        $name = $data['name'] ?? null;
+        $input = new \App\Dto\RegisterUserInput();
+        $input->email = $data['email'] ?? '';
+        $input->password = $data['password'] ?? '';
+        $input->name = $data['name'] ?? '';
 
-        if (!$email || !$password || !$name) {
-            return $this->json(['error' => 'Email, password and name are required.'], Response::HTTP_BAD_REQUEST);
+        // Validation du DTO (mot de passe fort, email, name)
+        $errors = $validator->validate($input);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            return $this->json(['error' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
+
+        $email = $input->email;
+        $password = $input->password;
+        $name = $input->name;
 
         // Vérifie si l'utilisateur existe déjà
         $existingUser = $em->getRepository(User::class)->findOneBy(['email' => $email]);
