@@ -1,6 +1,6 @@
 # Nutrition-App
 
-Te ultimate final projet to get my diploma and to become the best version of me. I have 1 mont.
+The ultimate final projet to get my diploma and to become the best version of myself. I have 1 month.
 
 # 🍽️ Nutrition App
 
