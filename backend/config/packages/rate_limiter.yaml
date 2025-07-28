@@ -1,0 +1,21 @@
+framework:
+    rate_limiter:
+        # Rate limiter pour les tentatives de login
+        login_attempts:
+            policy: 'fixed_window'
+            limit: 5
+            interval: '15 minutes'
+        
+        # Rate limiter pour les inscriptions
+        registration_attempts:
+            policy: 'fixed_window'
+            limit: 3
+            interval: '1 hour'
+        
+        # Rate limiter pour les API mutations (POST/PUT/DELETE)
+        api_mutations:
+            policy: 'token_bucket'
+            limit: 100
+            rate:
+                interval: '1 hour'
+                amount: 50
