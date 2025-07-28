@@ -2,7 +2,11 @@ nelmio_cors:
     defaults:
         allow_credentials: true
         allow_origin:
-            ["http://localhost:5173", "https://nutrition-app-steel.vercel.app"]
+            [
+                "http://localhost:5173",
+                "https://nutrition-app-steel.vercel.app",
+                "https://nutrition-app-steel-preprod.vercel.app",
+            ]
         allow_headers: ["Content-Type", "Authorization"]
         expose_headers: ["Link", "Authorization"]
         allow_methods: ["GET", "OPTIONS", "POST", "PUT", "PATCH", "DELETE"]
@@ -13,6 +17,7 @@ nelmio_cors:
                 [
                     "http://localhost:5173",
                     "https://nutrition-app-steel.vercel.app",
+                    "https://nutrition-app-steel-preprod.vercel.app",
                 ]
             allow_headers: ["Content-Type", "Authorization"]
             expose_headers: ["Link", "Authorization"]
