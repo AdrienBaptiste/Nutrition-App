@@ -37,17 +37,13 @@ const FoodsPage: React.FC = () => {
 
   useEffect(() => {
     const fetchFoods = async () => {
-      if (!jwt) {
-        setError('Non authentifié');
-        setLoading(false);
-        return;
-      }
-
       try {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
           method: 'GET',
-          headers: {
+          headers: jwt ? {
             'Authorization': `Bearer ${jwt}`,
+            'Content-Type': 'application/json',
+          } : {
             'Content-Type': 'application/json',
           },
         });
@@ -109,12 +105,14 @@ const FoodsPage: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800">Base d'Aliments</h1>
-            <Link
-              to="/foods/propose"
-              className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-            >
-              Proposer un Aliment
-            </Link>
+            {jwt && (
+              <Link
+                to="/foods/propose"
+                className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+              >
+                Proposer un Aliment
+              </Link>
+            )}
           </div>
 
           {foods.length === 0 ? (

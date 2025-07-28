@@ -20,16 +20,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
     uriTemplate: '/v1/foods',
     operations: [
         new GetCollection(),
-        new Post(),
+        new Post(security: 'is_granted("ROLE_USER")', securityMessage: 'Access denied.'),
         new Get(uriTemplate: '/v1/foods/{id}'),
-        new Put(uriTemplate: '/v1/foods/{id}'),
-        new Delete(uriTemplate: '/v1/foods/{id}')
+        new Put(uriTemplate: '/v1/foods/{id}', security: 'is_granted("ROLE_USER")', securityMessage: 'Access denied.'),
+        new Delete(uriTemplate: '/v1/foods/{id}', security: 'is_granted("ROLE_USER")', securityMessage: 'Access denied.')
     ],
     formats: ['jsonld' => ['application/ld+json'], 'json' => ['application/json']],
     normalizationContext: ['groups' => ['food:read']],
     denormalizationContext: ['groups' => ['food:write']],
-    security: 'is_granted("ROLE_USER")',
-    securityMessage: 'Access denied.',
     provider: 'App\State\FoodStateProvider',
     processor: 'App\State\FoodStateProcessor'
 )]

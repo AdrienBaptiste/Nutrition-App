@@ -34,7 +34,7 @@ interface SelectedDish extends CalculatorDish {
 }
 
 const CalculatorPage: React.FC = () => {
-  const { jwt } = useAuth();
+  const { jwt, user } = useAuth(); // user sera null pour les visiteurs
   const [foods, setFoods] = useState<CalculatorFood[]>([]);
   const [dishes, setDishes] = useState<CalculatorDish[]>([]);
   const [selectedFoods, setSelectedFoods] = useState<SelectedFood[]>([]);
@@ -56,17 +56,13 @@ const CalculatorPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!jwt) return;
     const fetchData = async () => {
       setLoading(true);
       try {
+        const headers: Record<string, string> | undefined = jwt ? { Authorization: `Bearer ${jwt}` } : undefined;
         const [foodsRes, dishesRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
-            headers: { Authorization: `Bearer ${jwt}` },
-          }),
-          fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes`, {
-            headers: { Authorization: `Bearer ${jwt}` },
-          }),
+          fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, { headers }),
+          fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes`, { headers }),
         ]);
         const foodsData = await foodsRes.json();
         const dishesData = await dishesRes.json();
@@ -80,8 +76,9 @@ const dishesWithNutrition = await Promise.all(
             const id = dish.id ?? (typeof dish['@id'] === 'string' ? Number(dish['@id'].split('/').pop()) : undefined);
             if (!id) return null;
             try {
+              const headers: Record<string, string> | undefined = jwt ? { Authorization: `Bearer ${jwt}` } : undefined;
               const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}/nutrition`, {
-                headers: { Authorization: `Bearer ${jwt}` },
+                headers,
               });
               if (!res.ok) throw new Error('Erreur nutrition');
               const nutrition = await res.json();
@@ -152,12 +149,14 @@ const dishesWithNutrition = await Promise.all(
           >
             + Ajouter un aliment
           </button>
-          <button
-            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 font-semibold"
-            onClick={() => setDishModalOpen(true)}
-          >
-            + Ajouter un plat
-          </button>
+          {user && (
+            <button
+              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 font-semibold"
+              onClick={() => setDishModalOpen(true)}
+            >
+              + Ajouter un plat
+            </button>
+          )}
         </div>
         {/* Cards des aliments/plats sélectionnés */}
         <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

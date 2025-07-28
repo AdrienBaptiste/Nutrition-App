@@ -18,19 +18,27 @@ class FoodStateProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         $user = $this->security->getUser();
-        
-        if (!$user) {
-            return null;
-        }
 
-        $isAdmin = $this->security->isGranted('ROLE_ADMIN') || 
-               $user->getEmail() === 'admin@nutrition.app' ||
-               str_contains($user->getEmail(), 'admin');
+        $isAdmin = $user && (
+            $this->security->isGranted('ROLE_ADMIN') || 
+            $user->getEmail() === 'admin@nutrition.app' ||
+            str_contains($user->getEmail(), 'admin')
+        );
 
         // Si c'est une collection (GET /api/v1/foods)
         if ($operation instanceof \ApiPlatform\Metadata\GetCollection) {
             // Vérifier si c'est pour "Mes propositions" via un paramètre de requête
             $includeMyProposals = isset($context['filters']['includeMyProposals']) && $context['filters']['includeMyProposals'] === 'true';
+            
+            if (!$user) {
+                // Visiteur non connecté : SEULEMENT les aliments active
+                $qb = $this->foodRepository->createQueryBuilder('f')
+                    ->where('f.status = :active')
+                    ->setParameter('active', 'active')
+                    ->orderBy('f.name', 'ASC');
+                
+                return $qb->getQuery()->getResult();
+            }
             
             if ($isAdmin) {
                 // Admin voit tous les aliments (active + pending)
@@ -67,6 +75,11 @@ class FoodStateProvider implements ProviderInterface
                 return null;
             }
             
+            if (!$user) {
+                // Visiteur non connecté : SEULEMENT les aliments active
+                return $food->getStatus() === 'active' ? $food : null;
+            }
+            
             if ($isAdmin) {
                 // Admin peut voir tous les aliments
                 return $food;
@@ -79,6 +92,7 @@ class FoodStateProvider implements ProviderInterface
                     return $food;
                 }
             }
+            
             
             return null; // Accès refusé
         }

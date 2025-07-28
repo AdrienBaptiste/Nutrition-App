@@ -43,11 +43,7 @@ const AppRouter: React.FC = () => (
     {/* Pages CRUD Aliments */}
     <Route
       path="/foods"
-      element={
-        <PrivateRoute>
-          <FoodsPage />
-        </PrivateRoute>
-      }
+      element={<FoodsPage />}
     />
     <Route
       path="/foods/new"
@@ -184,11 +180,7 @@ const AppRouter: React.FC = () => (
     {/* Calculateur nutritionnel */}
     <Route
       path="/calculator"
-      element={
-        <PrivateRoute>
-          <CalculatorPage />
-        </PrivateRoute>
-      }
+      element={<CalculatorPage />}
     />
     {/* Calendrier */}
     <Route
