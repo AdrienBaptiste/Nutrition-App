@@ -32,7 +32,7 @@ const CreateMealPage: React.FC = () => {
     setServerError(undefined);
     
     try {
-      const response = await fetch('http://localhost:8000/api/v1/meals', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${jwt}`,

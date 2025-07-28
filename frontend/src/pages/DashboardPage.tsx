@@ -27,7 +27,7 @@ const DashboardPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/profile', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/profile`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -71,7 +71,9 @@ const DashboardPage: React.FC = () => {
       <MainLayout>
         <div className="min-h-[80vh] flex items-center justify-center">
           <div className="text-red-600 text-center">
-            <Title level={2} className="mb-2">Erreur</Title>
+            <Title level={2} className="mb-2">
+              Erreur
+            </Title>
             <p>{error}</p>
           </div>
         </div>
@@ -79,11 +81,7 @@ const DashboardPage: React.FC = () => {
     );
   }
 
-  return (
-    <MainLayout>
-      {profile && <DashboardContent profile={profile} />}
-    </MainLayout>
-  );
+  return <MainLayout>{profile && <DashboardContent profile={profile} />}</MainLayout>;
 };
 
 export default DashboardPage;

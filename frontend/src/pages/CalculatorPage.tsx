@@ -61,10 +61,10 @@ const CalculatorPage: React.FC = () => {
       setLoading(true);
       try {
         const [foodsRes, dishesRes] = await Promise.all([
-          fetch('http://localhost:8000/api/v1/foods', {
+          fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
             headers: { Authorization: `Bearer ${jwt}` },
           }),
-          fetch('http://localhost:8000/api/v1/dishes', {
+          fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes`, {
             headers: { Authorization: `Bearer ${jwt}` },
           }),
         ]);
@@ -80,7 +80,7 @@ const dishesWithNutrition = await Promise.all(
             const id = dish.id ?? (typeof dish['@id'] === 'string' ? Number(dish['@id'].split('/').pop()) : undefined);
             if (!id) return null;
             try {
-              const res = await fetch(`http://localhost:8000/api/v1/dishes/${dish.id}/nutrition`, {
+              const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}/nutrition`, {
                 headers: { Authorization: `Bearer ${jwt}` },
               });
               if (!res.ok) throw new Error('Erreur nutrition');

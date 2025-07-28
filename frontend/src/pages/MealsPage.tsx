@@ -27,7 +27,7 @@ const MealsPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/meals', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${jwt}`,
@@ -65,7 +65,7 @@ const MealsPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/meals/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${jwt}`,

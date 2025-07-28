@@ -38,7 +38,7 @@ const EditWeightPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/weights/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/weights/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${jwt}`,
@@ -76,7 +76,7 @@ const EditWeightPage: React.FC = () => {
     setServerError(undefined);
     
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/weights/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/weights/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${jwt}`,

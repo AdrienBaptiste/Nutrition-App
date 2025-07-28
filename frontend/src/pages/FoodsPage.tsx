@@ -44,7 +44,7 @@ const FoodsPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/foods', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${jwt}`,
@@ -196,7 +196,7 @@ const FoodsPage: React.FC = () => {
             onConfirm={async () => {
               setActionLoading(pendingDeleteId);
               try {
-                const response = await fetch(`http://localhost:8000/api/v1/foods/${pendingDeleteId}`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods/${pendingDeleteId}`, {
                   method: 'DELETE',
                   headers: { 'Authorization': `Bearer ${jwt}` },
                 });

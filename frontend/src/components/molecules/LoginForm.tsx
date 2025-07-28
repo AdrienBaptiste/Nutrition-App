@@ -20,7 +20,7 @@ const LoginForm: React.FC<{ onLogin?: (jwt: string) => void }> = ({ onLogin }) =
   const onSubmit = async (data: LoginFormInputs) => {
     setServerError(undefined);
     try {
-      const response = await fetch('http://localhost:8000/api/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

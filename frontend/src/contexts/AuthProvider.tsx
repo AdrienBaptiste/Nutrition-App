@@ -11,7 +11,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const fetchUserProfile = async () => {
       if (jwt) {
         try {
-          const response = await fetch('http://localhost:8000/api/v1/profile', {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/profile`, {
             headers: { Authorization: `Bearer ${jwt}` },
           });
           if (response.ok) {

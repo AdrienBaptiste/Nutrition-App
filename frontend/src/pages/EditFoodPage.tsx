@@ -41,7 +41,7 @@ const EditFoodPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/foods/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${jwt}`,
@@ -81,7 +81,7 @@ const EditFoodPage: React.FC = () => {
     setServerError(undefined);
     
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/foods/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${jwt}`,

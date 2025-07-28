@@ -49,7 +49,7 @@ const MyFoodProposalsPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/foods?includeMyProposals=true', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods?includeMyProposals=true`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
 
@@ -85,7 +85,7 @@ const MyFoodProposalsPage: React.FC = () => {
 
     try {
       console.log(`[FRONTEND] Tentative de suppression de l'aliment ID: ${id}`);
-      const response = await fetch(`http://localhost:8000/api/v1/foods/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwt}` },
       });

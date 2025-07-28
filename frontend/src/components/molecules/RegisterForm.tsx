@@ -23,7 +23,7 @@ const RegisterForm: React.FC<{ onRegister?: () => void }> = ({ onRegister }) => 
     setServerError(undefined);
     setSuccess(false);
     try {
-      const response = await fetch('http://localhost:8000/api/register', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

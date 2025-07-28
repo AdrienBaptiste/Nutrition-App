@@ -38,7 +38,7 @@ const ProposeFoodPage: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/foods', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${jwt}`,

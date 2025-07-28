@@ -88,7 +88,7 @@ const ComposeMealPage: React.FC = () => {
 
       try {
         // Récupérer les informations du repas
-        const mealResponse = await fetch(`http://localhost:8000/api/v1/meals/${id}`, {
+        const mealResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals/${id}`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
 
@@ -100,7 +100,7 @@ const ComposeMealPage: React.FC = () => {
         setMeal(mealData);
 
         // Récupérer la composition du repas (constitutes)
-        const constitutesResponse = await fetch(`http://localhost:8000/api/v1/constitutes`, {
+        const constitutesResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/constitutes`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
 
@@ -153,7 +153,7 @@ const ComposeMealPage: React.FC = () => {
 
                 // Si c'est un aliment
                 if (constitute.food && typeof constitute.food === 'string') {
-                  const foodResponse = await fetch(`http://localhost:8000${constitute.food}`, {
+                  const foodResponse = await fetch(`${import.meta.env.VITE_API_URL}${constitute.food}`, {
                     headers: { Authorization: `Bearer ${jwt}` },
                   });
                   if (foodResponse.ok) {
@@ -163,7 +163,7 @@ const ComposeMealPage: React.FC = () => {
 
                 // Si c'est un plat
                 if (constitute.dish && typeof constitute.dish === 'string') {
-                  const dishResponse = await fetch(`http://localhost:8000${constitute.dish}`, {
+                  const dishResponse = await fetch(`${import.meta.env.VITE_API_URL}${constitute.dish}`, {
                     headers: { Authorization: `Bearer ${jwt}` },
                   });
                   if (dishResponse.ok) {
@@ -186,7 +186,7 @@ const ComposeMealPage: React.FC = () => {
         }
 
         // Récupérer la liste des aliments disponibles
-        const foodsResponse = await fetch(`http://localhost:8000/api/v1/foods`, {
+        const foodsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
 
@@ -197,7 +197,7 @@ const ComposeMealPage: React.FC = () => {
         }
 
         // Récupérer la liste des plats disponibles
-        const dishesResponse = await fetch(`http://localhost:8000/api/v1/dishes`, {
+        const dishesResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
 
@@ -236,7 +236,7 @@ const ComposeMealPage: React.FC = () => {
         body.dish_quantity = data.quantity;
       }
 
-      const response = await fetch('http://localhost:8000/api/v1/constitutes', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/constitutes`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -304,7 +304,7 @@ const ComposeMealPage: React.FC = () => {
     if (!confirm('Supprimer cet élément du repas ?')) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/constitutes/${constituteId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/constitutes/${constituteId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwt}` },
       });
@@ -323,7 +323,7 @@ const ComposeMealPage: React.FC = () => {
     if (!confirm('Supprimer définitivement ce repas et sa composition ?')) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/meals/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwt}` },
       });
@@ -351,7 +351,7 @@ const ComposeMealPage: React.FC = () => {
   useEffect(() => {
     if (!id || !jwt) return;
     setNutritionLoading(true);
-    fetch(`http://localhost:8000/api/v1/meals/${id}/nutrition`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals/${id}/nutrition`, {
       headers: { Authorization: `Bearer ${jwt}` },
     })
       .then((res) => {

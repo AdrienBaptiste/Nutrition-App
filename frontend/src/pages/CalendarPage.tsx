@@ -54,10 +54,10 @@ const CalendarPage: React.FC = () => {
       }
       try {
         // Fetch meals
-        const mealRes = await fetch('http://localhost:8000/api/v1/meals', {
+        const mealRes = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
-        const weightRes = await fetch('http://localhost:8000/api/v1/weights', {
+        const weightRes = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/weights`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
         const mealData = await mealRes.json();

@@ -30,10 +30,10 @@ const WeightsPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/weights', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/weights`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${jwt}`,
+            Authorization: `Bearer ${jwt}`,
             'Content-Type': 'application/json',
           },
         });
@@ -48,9 +48,9 @@ const WeightsPage: React.FC = () => {
         }
 
         const data = await response.json();
-        
+
         // API Platform retourne les données dans data.member
-        const weights = Array.isArray(data) ? data : (data.member || []);
+        const weights = Array.isArray(data) ? data : data.member || [];
         setWeights(weights);
       } catch {
         setError('Erreur réseau. Vérifiez votre connexion.');
@@ -69,21 +69,23 @@ const WeightsPage: React.FC = () => {
   const handleConfirmDelete = async () => {
     if (!pendingDeleteId) return;
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/weights/${pendingDeleteId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${jwt}`,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/weights/${pendingDeleteId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
       if (response.ok) {
-        setWeights(weights.filter(weight => weight.id !== pendingDeleteId));
+        setWeights(weights.filter((weight) => weight.id !== pendingDeleteId));
         setPendingDeleteId(null);
       } else {
         alert('Erreur lors de la suppression');
       }
     } catch {
       alert('Erreur réseau lors de la suppression');
-    } finally {
     }
   };
 
@@ -101,14 +103,14 @@ const WeightsPage: React.FC = () => {
 
   const calculateEvolution = (currentIndex: number) => {
     if (currentIndex === weights.length - 1) return null;
-    
+
     const current = weights[currentIndex];
     const previous = weights[currentIndex + 1];
     const diff = current.value - previous.value;
-    
+
     return {
       value: Math.abs(diff),
-      trend: diff > 0 ? 'up' : diff < 0 ? 'down' : 'stable'
+      trend: diff > 0 ? 'up' : diff < 0 ? 'down' : 'stable',
     };
   };
 
@@ -144,7 +146,8 @@ const WeightsPage: React.FC = () => {
       >
         <div className="mb-2 font-semibold text-lg text-gray-800">Confirmer la suppression</div>
         <div className="text-gray-700">
-          Êtes-vous sûr de vouloir supprimer cette pesée ?<br />
+          Êtes-vous sûr de vouloir supprimer cette pesée ?
+          <br />
           Cette action est <span className="text-red-600 font-bold">irréversible</span>.
         </div>
       </ConfirmModal>
@@ -166,8 +169,12 @@ const WeightsPage: React.FC = () => {
           {weights.length === 0 ? (
             <Card>
               <div className="text-center py-8">
-                <Title level={3} className="mb-2 text-gray-800">Aucune pesée</Title>
-                <p className="text-gray-600 mb-4">Commencez à suivre votre poids en enregistrant votre première pesée.</p>
+                <Title level={3} className="mb-2 text-gray-800">
+                  Aucune pesée
+                </Title>
+                <p className="text-gray-600 mb-4">
+                  Commencez à suivre votre poids en enregistrant votre première pesée.
+                </p>
                 <Link
                   to="/weights/new"
                   className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
@@ -184,16 +191,22 @@ const WeightsPage: React.FC = () => {
                   <Card key={weight.id}>
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center space-x-2">
-                        <span className="text-2xl font-bold text-gray-800">
-                          {weight.value} kg
-                        </span>
+                        <span className="text-2xl font-bold text-gray-800">{weight.value} kg</span>
                         {evolution && (
-                          <span className={`text-sm font-medium ${
-                            evolution.trend === 'up' ? 'text-red-600' : 
-                            evolution.trend === 'down' ? 'text-green-600' : 
-                            'text-gray-600'
-                          }`}>
-                            {evolution.trend === 'up' ? '↗' : evolution.trend === 'down' ? '↘' : '→'}
+                          <span
+                            className={`text-sm font-medium ${
+                              evolution.trend === 'up'
+                                ? 'text-red-600'
+                                : evolution.trend === 'down'
+                                  ? 'text-green-600'
+                                  : 'text-gray-600'
+                            }`}
+                          >
+                            {evolution.trend === 'up'
+                              ? '↗'
+                              : evolution.trend === 'down'
+                                ? '↘'
+                                : '→'}
                             {evolution.value.toFixed(1)}kg
                           </span>
                         )}
@@ -213,7 +226,7 @@ const WeightsPage: React.FC = () => {
                         </button>
                       </div>
                     </div>
-                    
+
                     <div className="text-sm text-gray-500">
                       <span className="font-medium">Date:</span>
                       <span className="ml-1">{formatDate(weight.date)}</span>

@@ -48,7 +48,7 @@ const AdminFoodModerationPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/foods', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
 
@@ -85,7 +85,7 @@ const AdminFoodModerationPage: React.FC = () => {
     setActionLoading(id);
     try {
       // D'abord récupérer les données complètes de l'aliment
-      const getUrl = `http://localhost:8000/api/v1/foods/${id}`;
+      const getUrl = `${import.meta.env.VITE_API_URL}/api/v1/foods/${id}`;
       const getResponse = await fetch(getUrl, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
@@ -94,7 +94,7 @@ const AdminFoodModerationPage: React.FC = () => {
       }
       const foodData = await getResponse.json();
       // Maintenant utiliser PUT avec toutes les données + status modifié
-      const putUrl = `http://localhost:8000/api/v1/foods/${id}`;
+      const putUrl = `${import.meta.env.VITE_API_URL}/api/v1/foods/${id}`;
       const response = await fetch(putUrl, {
         method: 'PUT',
         headers: {
@@ -135,7 +135,7 @@ const AdminFoodModerationPage: React.FC = () => {
   const doReject = async (id: number) => {
     setActionLoading(id);
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/foods/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwt}` },
       });

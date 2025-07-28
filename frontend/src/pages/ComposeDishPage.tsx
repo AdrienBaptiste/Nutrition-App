@@ -78,7 +78,7 @@ const ComposeDishPage: React.FC = () => {
 
       try {
         // Récupérer les informations du plat
-        const dishResponse = await fetch(`http://localhost:8000/api/v1/dishes/${id}`, {
+        const dishResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}`, {
           headers: { 'Authorization': `Bearer ${jwt}` },
         });
 
@@ -96,7 +96,7 @@ const ComposeDishPage: React.FC = () => {
         } else {
           console.log('No composition in dish data, fetching separately...'); // Debug temporaire
           // Récupérer la composition du plat (contains) séparément
-          const containsResponse = await fetch(`http://localhost:8000/api/v1/contains`, {
+          const containsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/contains`, {
             headers: { 'Authorization': `Bearer ${jwt}` },
           });
 
@@ -124,7 +124,7 @@ const ComposeDishPage: React.FC = () => {
                 const foodIri = contain.food;
                 if (typeof foodIri === 'string') {
                   // Récupérer les données complètes de l'aliment
-                  const foodResponse = await fetch(`http://localhost:8000${foodIri}`, {
+                  const foodResponse = await fetch(`${import.meta.env.VITE_API_URL}${foodIri}`, {
                     headers: { 'Authorization': `Bearer ${jwt}` },
                   });
                   if (foodResponse.ok) {
@@ -141,7 +141,7 @@ const ComposeDishPage: React.FC = () => {
         }
 
         // Récupérer la liste des aliments disponibles
-        const foodsResponse = await fetch(`http://localhost:8000/api/v1/foods`, {
+        const foodsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, {
           headers: { 'Authorization': `Bearer ${jwt}` },
         });
 
@@ -164,7 +164,7 @@ const ComposeDishPage: React.FC = () => {
   useEffect(() => {
     if (!id || !jwt) return;
     setNutritionLoading(true);
-    fetch(`http://localhost:8000/api/v1/dishes/${id}/nutrition`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}/nutrition`, {
       headers: { 'Authorization': `Bearer ${jwt}` }
     })
       .then(res => {
@@ -178,7 +178,7 @@ const ComposeDishPage: React.FC = () => {
 
   const onAddFood = async (data: AddFoodFormInputs) => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/contains', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/contains`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${jwt}`,
@@ -215,7 +215,7 @@ const ComposeDishPage: React.FC = () => {
     if (!confirm('Supprimer cet aliment du plat ?')) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/contains/${containId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/contains/${containId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${jwt}` },
       });
@@ -234,7 +234,7 @@ const ComposeDishPage: React.FC = () => {
     if (!confirm('Supprimer définitivement ce plat et sa composition ?')) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/dishes/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${jwt}` },
       });

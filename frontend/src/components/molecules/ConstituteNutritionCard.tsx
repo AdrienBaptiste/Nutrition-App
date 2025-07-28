@@ -41,7 +41,7 @@ const ConstituteNutritionCard: React.FC<ConstituteNutritionCardProps> = ({
   useEffect(() => {
     if (constitute.dish && constitute.dish.id && constitute.dish_quantity) {
       setLoading(true);
-      fetch(`http://localhost:8000/api/v1/dishes/${constitute.dish.id}/nutrition`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${constitute.dish.id}/nutrition`, {
         headers: { Authorization: `Bearer ${jwt}` },
       })
         .then((res) => {

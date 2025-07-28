@@ -43,7 +43,7 @@ const DishesPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:8000/api/v1/dishes', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${jwt}`,
@@ -81,7 +81,7 @@ const DishesPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/dishes/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${jwt}`,
