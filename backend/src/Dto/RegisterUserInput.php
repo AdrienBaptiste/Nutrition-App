@@ -6,11 +6,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class RegisterUserInput
 {
-    #[Assert\NotBlank(message: 'Email is required')]
-    #[Assert\Email(message: 'Invalid email address')]
+    #[Assert\NotBlank(message: 'Un email est requis')]
+    #[Assert\Email(message: 'Un email est requis')]
     public string $email;
 
-    #[Assert\NotBlank(message: 'Password is required')]
+    #[Assert\NotBlank(message: 'Un mot de passe est requis')]
     #[Assert\Length(min: 8, minMessage: 'Le mot de passe doit faire au moins 8 caractères')]
     #[Assert\Regex(
         pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/',
@@ -18,6 +18,6 @@ class RegisterUserInput
     )]
     public string $password;
 
-    #[Assert\NotBlank(message: 'Name is required')]
+    #[Assert\NotBlank(message: 'Un nom est requis')]
     public string $name;
 }

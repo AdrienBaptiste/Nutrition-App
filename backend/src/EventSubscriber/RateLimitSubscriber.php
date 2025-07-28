@@ -47,7 +47,7 @@ class RateLimitSubscriber implements EventSubscriberInterface
             $limit = $limiter->consume(1);
             
             if (!$limit->isAccepted()) {
-                $this->throwRateLimitException($limit);
+                $this->throwRateLimitException($limit, 'login');
             }
             
             // Ajouter les headers de rate limiting
@@ -60,7 +60,7 @@ class RateLimitSubscriber implements EventSubscriberInterface
             $limit = $limiter->consume(1);
             
             if (!$limit->isAccepted()) {
-                $this->throwRateLimitException($limit);
+                $this->throwRateLimitException($limit, 'register');
             }
             
             // Ajouter les headers de rate limiting
@@ -99,13 +99,22 @@ class RateLimitSubscriber implements EventSubscriberInterface
         return $request->getClientIp() ?? '127.0.0.1';
     }
 
-    private function throwRateLimitException($limit): void
+    private function throwRateLimitException($limit, $context = null): void
     {
         $retryAfter = $limit->getRetryAfter();
-        
+
+        // Message personnalisé selon le contexte
+        if ($context === 'register') {
+            $userMessage = 'Trop de tentatives de création de compte. Veuillez patienter avant de réessayer.';
+        } elseif ($context === 'login') {
+            $userMessage = 'Trop de tentatives de connexion. Veuillez patienter avant de réessayer.';
+        } else {
+            $userMessage = 'Trop de requêtes. Veuillez réessayer plus tard.';
+        }
+
         $response = new JsonResponse([
             'error' => 'Rate limit exceeded',
-            'message' => 'Trop de tentatives. Veuillez réessayer plus tard.',
+            'message' => $userMessage,
             'retry_after' => $retryAfter->getTimestamp() - time(),
         ], 429);
 
@@ -115,7 +124,7 @@ class RateLimitSubscriber implements EventSubscriberInterface
         $response->headers->set('X-RateLimit-Reset', (string) $retryAfter->getTimestamp());
         $response->headers->set('Retry-After', (string) ($retryAfter->getTimestamp() - time()));
 
-        throw new TooManyRequestsHttpException($retryAfter->getTimestamp() - time(), 'Rate limit exceeded', null, 429, $response->headers->all());
+        throw new TooManyRequestsHttpException($retryAfter->getTimestamp() - time(), $userMessage, null, 429, $response->headers->all());
     }
 
     private function addRateLimitHeaders($request, $limit): void
