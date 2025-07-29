@@ -8,7 +8,7 @@ export interface HomeLinkProps {
 }
 
 const HomeLink: React.FC<HomeLinkProps> = ({
-  logoSrc = '/src/assets/Logo-white.webp',
+  logoSrc = '/src/assets/Logo-black.webp',
   alt = 'Nutrition App',
   className = '',
 }) => {

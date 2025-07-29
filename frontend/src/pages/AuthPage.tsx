@@ -23,7 +23,7 @@ const AuthPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-gray-50">
+      <div className="items-center justify-center bg-transparent">
         <AuthSection onLogin={handleLogin} />
         {isAuthenticated && (
           <div className="mt-4 text-green-600 font-medium">Connexion réussie ! Redirection...</div>

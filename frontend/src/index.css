@@ -14,16 +14,16 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+/*
 a {
   font-weight: 500;
-  color: #ffffff;
+  color: oklch(27.8% 0.033 256.848);  C'est le grey-800 de Tailwind 
   text-decoration: inherit;
 }
 a:hover {
   color: #505050;
 }
-
+*/
 body {
   margin: 0;
   display: flex;
@@ -62,7 +62,6 @@ textarea,
 select,
 span {
   color: #222;
-  background-color: #fff;
 }
 input::placeholder,
 textarea::placeholder {

@@ -13,9 +13,9 @@ const AuthSection: React.FC<AuthSectionProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:space-x-8 items-center justify-center min-h-[70vh]">
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-[70vh]">
       {!showRegister ? (
-        <div className="w-full md:w-1/2">
+        <div className="w-full">
           <LoginForm onLogin={onLogin} />
           <div className="text-center mt-4">
             <span>Pas encore de compte ? </span>
@@ -29,7 +29,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({ onLogin }) => {
           </div>
         </div>
       ) : (
-        <div className="w-full md:w-1/2">
+        <div className="w-full">
           <RegisterForm onRegister={handleRegisterSuccess} />
           <div className="text-center mt-4">
             <span>Déjà inscrit ? </span>
