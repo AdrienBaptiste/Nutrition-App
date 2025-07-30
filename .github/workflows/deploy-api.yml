@@ -18,16 +18,9 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.ALWAYSDATA_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Force SSH to use the correct key
-        run: |
-          echo "Host ${{ secrets.ALWAYSDATA_HOST }}
-            HostName ${{ secrets.ALWAYSDATA_HOST }}
-            IdentityFile ~/.ssh/id_rsa
-            IdentitiesOnly yes" >> ~/.ssh/config
 
       - name: Test SSH connection to Alwaysdata
         run: ssh -T ${{ secrets.ALWAYSDATA_HOST }} true
