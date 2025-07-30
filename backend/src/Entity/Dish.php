@@ -54,6 +54,8 @@ class Dish
 
     /**
      * @var Collection<int, Contain>
+     *
+     * Relation bidirectionnelle : voir inversedBy="contains" dans Contain
      */
     #[ORM\OneToMany(targetEntity: Contain::class, mappedBy: 'dish', cascade: ['remove'])]
     #[Groups(['dish:read'])]
@@ -61,6 +63,8 @@ class Dish
 
     /**
      * @var Collection<int, Constitute>
+     *
+     * Relation bidirectionnelle : voir inversedBy="constitutes" dans Constitute
      */
     #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'dish', cascade: ['remove'])]
     #[Groups(['dish:read'])]

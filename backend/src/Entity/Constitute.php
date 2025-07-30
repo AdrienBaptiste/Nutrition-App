@@ -37,17 +37,17 @@ class Constitute
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'constitutes')]
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(['constitute:read', 'constitute:write'])]
     private ?Food $food = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'constitutes')]
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(['constitute:read', 'constitute:write'])]
     private ?Dish $dish = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'constitutes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['constitute:read', 'constitute:write'])]
     private ?Meal $meal = null;

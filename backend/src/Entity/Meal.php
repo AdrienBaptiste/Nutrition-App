@@ -60,6 +60,8 @@ class Meal
 
     /**
      * @var Collection<int, Constitute>
+     *
+     * Relation bidirectionnelle : voir inversedBy="constitutes" dans Constitute
      */
     #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'meal', cascade: ['remove'])]
     #[Groups(['meal:read'])]

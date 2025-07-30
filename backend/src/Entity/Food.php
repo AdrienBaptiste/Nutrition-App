@@ -74,12 +74,16 @@ class Food
 
     /**
      * @var Collection<int, Contain>
+     *
+     * Relation bidirectionnelle : voir inversedBy="contains" dans Contain
      */
     #[ORM\OneToMany(targetEntity: Contain::class, mappedBy: 'food')]
     private Collection $contains;
 
     /**
      * @var Collection<int, Constitute>
+     *
+     * Relation bidirectionnelle : voir inversedBy="constitutes" dans Constitute
      */
     #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'food')]
     private Collection $constitutes;

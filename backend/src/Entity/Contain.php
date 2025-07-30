@@ -38,12 +38,12 @@ class Contain
     #[Groups(['contain:read', 'dish:read'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'contains')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['contain:read', 'contain:write', 'dish:read'])]
     private ?Food $food = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'contains')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['contain:read', 'contain:write'])]
     private ?Dish $dish = null;
