@@ -31,4 +31,5 @@ jobs:
           git config user.email "ci@github.com"
           git add .
           git commit -m "Deploy from GitHub Actions"
+          git branch -m main
           GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git push --force alwaysdata main
