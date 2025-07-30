@@ -26,6 +26,8 @@ jobs:
         run: |
           cd backend
           git init
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
           git remote add alwaysdata ssh://${{ secrets.ALWAYSDATA_HOST }}:${{ secrets.ALWAYSDATA_REPO }}
           git add .
           git commit -m "Deploy from GitHub Actions"
