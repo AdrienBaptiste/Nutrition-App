@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up SSH
+      - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
@@ -26,10 +26,10 @@ jobs:
         run: |
           cd backend
           git init
-          git remote add alwaysdata ssh://adrienbaptiste@${{ secrets.ALWAYSDATA_HOST }}:${{ secrets.ALWAYSDATA_REPO }}
-          git config user.name "github-actions"
-          git config user.email "ci@github.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git add .
           git commit -m "Deploy from GitHub Actions"
           git branch -m main
-          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git push --force alwaysdata main
+          git remote add alwaysdata ssh://adrienbaptiste@${{ secrets.ALWAYSDATA_HOST }}:${{ secrets.ALWAYSDATA_REPO }}
+          git push --force alwaysdata main
