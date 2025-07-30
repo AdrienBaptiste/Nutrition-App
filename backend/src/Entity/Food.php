@@ -2,39 +2,97 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\FoodRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: FoodRepository::class)]
+#[ApiResource(
+    uriTemplate: '/v1/foods',
+    operations: [
+        new GetCollection(),
+        new Post(security: 'is_granted("ROLE_USER")', securityMessage: 'Access denied.'),
+        new Get(uriTemplate: '/v1/foods/{id}'),
+        new Put(uriTemplate: '/v1/foods/{id}', security: 'is_granted("ROLE_USER")', securityMessage: 'Access denied.'),
+        new Delete(uriTemplate: '/v1/foods/{id}', security: 'is_granted("ROLE_USER")', securityMessage: 'Access denied.')
+    ],
+    formats: ['jsonld' => ['application/ld+json'], 'json' => ['application/json']],
+    normalizationContext: ['groups' => ['food:read']],
+    denormalizationContext: ['groups' => ['food:write']],
+    provider: 'App\State\FoodStateProvider',
+    processor: 'App\State\FoodStateProcessor'
+)]
 class Food
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['food:read', 'dish:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['food:read', 'food:write', 'dish:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['food:read', 'food:write'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['food:read', 'food:write'])]
     private ?float $protein = null;
 
     #[ORM\Column]
+    #[Groups(['food:read', 'food:write'])]
     private ?float $carbs = null;
 
     #[ORM\Column]
+    #[Groups(['food:read', 'food:write'])]
     private ?float $fat = null;
 
     #[ORM\Column]
+    #[Groups(['food:read', 'food:write', 'dish:read'])]
     private ?float $calories = null;
+
+    #[ORM\Column(length: 20, options: ['default' => 'active'])]
+    #[Groups(['food:read', 'food:write'])]
+    private string $status = 'active';
 
     #[ORM\ManyToOne(inversedBy: 'foods')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['food:read'])]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, Contain>
+     *
+     * Relation bidirectionnelle : voir inversedBy="contains" dans Contain
+     */
+    #[ORM\OneToMany(targetEntity: Contain::class, mappedBy: 'food')]
+    private Collection $contains;
+
+    /**
+     * @var Collection<int, Constitute>
+     *
+     * Relation bidirectionnelle : voir inversedBy="constitutes" dans Constitute
+     */
+    #[ORM\OneToMany(targetEntity: Constitute::class, mappedBy: 'food')]
+    private Collection $constitutes;
+
+    public function __construct()
+    {
+        $this->contains = new ArrayCollection();
+        $this->constitutes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +179,76 @@ class Food
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contain>
+     */
+    public function getContains(): Collection
+    {
+        return $this->contains;
+    }
+
+    public function addContain(Contain $contain): static
+    {
+        if (!$this->contains->contains($contain)) {
+            $this->contains->add($contain);
+            $contain->setFood($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContain(Contain $contain): static
+    {
+        if ($this->contains->removeElement($contain)) {
+            if ($contain->getFood() === $this) {
+                $contain->setFood(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Constitute>
+     */
+    public function getConstitutes(): Collection
+    {
+        return $this->constitutes;
+    }
+
+    public function addConstitute(Constitute $constitute): static
+    {
+        if (!$this->constitutes->contains($constitute)) {
+            $this->constitutes->add($constitute);
+            $constitute->setFood($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConstitute(Constitute $constitute): static
+    {
+        if ($this->constitutes->removeElement($constitute)) {
+            if ($constitute->getFood() === $this) {
+                $constitute->setFood(null);
+            }
+        }
 
         return $this;
     }

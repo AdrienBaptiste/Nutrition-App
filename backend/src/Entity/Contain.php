@@ -2,26 +2,54 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use App\Repository\ContainRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ContainRepository::class)]
+#[ApiResource(
+    uriTemplate: '/v1/contains',
+    operations: [
+        new GetCollection(),
+        new Post(),
+        new Get(uriTemplate: '/v1/contains/{id}'),
+        new Put(uriTemplate: '/v1/contains/{id}'),
+        new Delete(uriTemplate: '/v1/contains/{id}')
+    ],
+    formats: ['jsonld' => ['application/ld+json'], 'json' => ['application/json']],
+    normalizationContext: ['groups' => ['contain:read']],
+    denormalizationContext: ['groups' => ['contain:write']],
+    security: 'is_granted("ROLE_USER")',
+    securityMessage: 'Access denied.',
+    provider: 'App\\State\\ContainStateProvider',
+    processor: 'App\\State\\ContainStateProcessor'
+)]
 class Contain
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['contain:read', 'dish:read'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'contains')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['contain:read', 'contain:write', 'dish:read'])]
     private ?Food $food = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'contains')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['contain:read', 'contain:write'])]
     private ?Dish $dish = null;
 
     #[ORM\Column]
+    #[Groups(['contain:read', 'contain:write', 'dish:read'])]
     private ?float $quantity = null;
 
     public function getId(): ?int

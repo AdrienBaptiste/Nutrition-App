@@ -1,10 +1,19 @@
 #root {
-  max-width: 1280px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
-
+.rbc-today {
+  background-color: #79f08357;
+  box-shadow: inset 0px 0px 0px 3px #ffffff;
+}
+.rbc-off-range-bg {
+  background-color: #f05f5f33;
+}
+.rbc-calendar {
+  background: #ffffff;
+}
 .logo {
   height: 6em;
   padding: 1.5em;

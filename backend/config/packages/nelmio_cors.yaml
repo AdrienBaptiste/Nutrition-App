@@ -1,10 +1,25 @@
 nelmio_cors:
     defaults:
-        origin_regex: true
-        allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
-        allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
-        allow_headers: ['Content-Type', 'Authorization']
-        expose_headers: ['Link']
+        allow_credentials: true
+        allow_origin:
+            [
+                "http://localhost:5173",
+                "https://nutrition-app-steel.vercel.app",
+                "https://nutrition-app-steel-preprod.vercel.app",
+            ]
+        allow_headers: ["Content-Type", "Authorization"]
+        expose_headers: ["Link", "Authorization"]
+        allow_methods: ["GET", "OPTIONS", "POST", "PUT", "PATCH", "DELETE"]
         max_age: 3600
     paths:
-        '^/': null
+        "^/api/":
+            allow_origin:
+                [
+                    "http://localhost:5173",
+                    "https://nutrition-app-steel.vercel.app",
+                    "https://nutrition-app-steel-preprod.vercel.app",
+                ]
+            allow_headers: ["Content-Type", "Authorization"]
+            expose_headers: ["Link", "Authorization"]
+            allow_methods: ["GET", "OPTIONS", "POST", "PUT", "PATCH", "DELETE"]
+            max_age: 3600
