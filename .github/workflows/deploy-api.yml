@@ -22,17 +22,13 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.ALWAYSDATA_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Test SSH connection to Alwaysdata
-        run: ssh -T ${{ secrets.ALWAYSDATA_HOST }} true
-
       - name: Push backend to Alwaysdata
         run: |
           cd backend
           git init
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git branch -m main
-          git remote add alwaysdata ssh://${{ secrets.ALWAYSDATA_HOST }}:${{ secrets.ALWAYSDATA_REPO }}
+          git remote add alwaysdata ssh://adrienbaptiste@${{ secrets.ALWAYSDATA_HOST }}:${{ secrets.ALWAYSDATA_REPO }}
+          git config user.name "github-actions"
+          git config user.email "ci@github.com"
           git add .
           git commit -m "Deploy from GitHub Actions"
-          git push --force alwaysdata main
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" git push --force alwaysdata main
