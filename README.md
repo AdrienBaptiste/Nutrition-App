@@ -1,8 +1,5 @@
-# Nutrition-App
-
-The ultimate final projet to get my diploma and to become the best version of myself. I have 1 month.
-
 # 🍽️ Nutrition App
+The ultimate final projet to get my diploma and to become the best version of myself. I have 1 month.
 
 Projet fullstack avec un frontend React (Vite), un backend Symfony, une base MySQL et une configuration Docker pour le développement.
 
