@@ -1,0 +1,32 @@
+name: Deploy Symfony API to Alwaysdata
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.ALWAYSDATA_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Push backend to Alwaysdata
+        run: |
+          cd backend
+          git init
+          git remote add alwaysdata ssh://${{ secrets.ALWAYSDATA_HOST }}:${{ secrets.ALWAYSDATA_REPO }}
+          git add .
+          git commit -m "Deploy from GitHub Actions"
+          git push --force alwaysdata main
