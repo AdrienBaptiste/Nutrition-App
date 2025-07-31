@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Image from '../atoms/Image';
+import logoImage from '../../assets/Logo-black.webp';
 
 export interface HomeLinkProps {
   logoSrc?: string;
@@ -8,7 +10,7 @@ export interface HomeLinkProps {
 }
 
 const HomeLink: React.FC<HomeLinkProps> = ({
-  logoSrc = '/src/assets/Logo-black.webp',
+  logoSrc = logoImage,
   alt = 'Nutrition App',
   className = '',
 }) => {
@@ -16,13 +18,13 @@ const HomeLink: React.FC<HomeLinkProps> = ({
     <Link
       to="/"
       className={`flex items-center hover:opacity-80 transition-opacity duration-200 ${className}`.trim()}
-      style={{ padding: '2rem 0 2rem 0' }} // Test avec style inline
+      style={{ padding: '2rem 0 2rem 0' }}
     >
-      <img
+      <Image
         src={logoSrc}
         alt={alt}
         className="w-auto"
-        style={{ height: '3rem' }} // Test avec style inline
+        style={{ height: '3rem' }}
       />
     </Link>
   );
