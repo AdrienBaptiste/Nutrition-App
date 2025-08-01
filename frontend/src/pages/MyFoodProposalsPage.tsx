@@ -84,16 +84,16 @@ const MyFoodProposalsPage: React.FC = () => {
     setPendingDeleteId(null);
 
     try {
-      console.log(`[FRONTEND] Tentative de suppression de l'aliment ID: ${id}`);
+
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${jwt}` },
       });
 
-      console.log(`[FRONTEND] Réponse DELETE: ${response.status} ${response.statusText}`);
+
 
       if (response.ok) {
-        console.log(`[FRONTEND] Suppression réussie pour l'aliment ID: ${id}`);
+
         setProposals(proposals.filter((p) => p.id !== id));
         alert('Proposition supprimée avec succès !');
       } else {

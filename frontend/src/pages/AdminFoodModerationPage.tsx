@@ -23,13 +23,10 @@ interface FoodProposal {
 }
 
 const AdminFoodModerationPage: React.FC = () => {
-  const { jwt, user } = useAuth();
+  const { jwt } = useAuth();
 
   // Debug: afficher les infos utilisateur
-  console.log('=== INFO UTILISATEUR ADMIN PAGE ===');
-  console.log('User:', user);
-  console.log('User email:', user?.email);
-  console.log('JWT présent:', !!jwt);
+
   const [proposals, setProposals] = useState<FoodProposal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -32,7 +32,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
         navigate('/weights');
         break;
       default:
-        console.log(`Navigation vers ${section}`);
+
     }
   };
 

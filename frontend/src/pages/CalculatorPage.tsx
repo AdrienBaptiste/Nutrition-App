@@ -131,9 +131,9 @@ const dishesWithNutrition = await Promise.all(
   };
 
   // DEBUG LOGS
-  console.log('[DEBUG] selectedFoods:', selectedFoods);
-  console.log('[DEBUG] selectedDishes:', selectedDishes);
-  console.log('[DEBUG] totals:', totals);
+
+
+
 
   return (
     <MainLayout>
@@ -234,7 +234,7 @@ const dishesWithNutrition = await Promise.all(
               nutrition: dish.nutrition ?? { calories: 0, protein: 0, carbs: 0, fat: 0 },
               multiplier,
             };
-            console.log('[DEBUG] Plat ajouté à selectedDishes:', added);
+
             setSelectedDishes(prev => [
               ...prev,
               added,

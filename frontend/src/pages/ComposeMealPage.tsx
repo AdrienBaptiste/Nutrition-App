@@ -176,12 +176,6 @@ const ComposeMealPage: React.FC = () => {
             )
           );
 
-          console.log('Constitutes chargés:', constitutesWithData);
-          console.log('Premier constitute détaillé:', constitutesWithData[0]);
-          console.log(
-            'IDs des constitutes:',
-            constitutesWithData.map((c) => ({ id: c.id, keys: Object.keys(c) }))
-          );
           setConstitutes(constitutesWithData);
         }
 
@@ -287,7 +281,7 @@ const ComposeMealPage: React.FC = () => {
   };
 
   const handleRemoveItem = async (constituteId: number) => {
-    console.log('Tentative de suppression avec ID:', constituteId);
+
 
     // Debug détaillé si ID undefined
     if (constituteId === undefined) {
