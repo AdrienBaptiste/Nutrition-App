@@ -11,8 +11,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600 focus:ring-blue-400',
-  outline: 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300 hover:border-gray-400 focus:ring-gray-400',
+  primary:
+    'bg-[#67BB69] hover:bg-transparent text-white hover:text-[#3C2937] border-[#67BB69] focus:ring-[#67BB69]',
+  outline:
+    'bg-white hover:bg-gray-50 text-gray-700 border-gray-300 hover:border-gray-400 focus:ring-gray-400',
   success: 'bg-green-600 hover:bg-green-700 text-white border-green-600 focus:ring-green-400',
   danger: 'bg-red-600 hover:bg-red-700 text-white border-red-600 focus:ring-red-400',
 };
@@ -34,7 +36,8 @@ const Button: React.FC<ButtonProps> = ({
   const variantClasses = VARIANT_CLASSES[variant] || VARIANT_CLASSES.primary;
   const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.md;
 
-  const baseClasses = 'font-semibold rounded border focus:outline-none focus:ring-2 disabled:opacity-50 transition-colors duration-200';
+  const baseClasses =
+    'font-semibold rounded-full border focus:outline-none focus:ring-2 disabled:opacity-50 transition-colors duration-300';
   const combinedClasses = `${baseClasses} ${variantClasses} ${sizeClasses} ${className}`.trim();
 
   return (

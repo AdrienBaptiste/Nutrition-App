@@ -20,7 +20,7 @@ const Navbar: React.FC<Omit<NavbarProps, 'onLogout'>> = ({ isAuthenticated }) =>
     user?.roles?.includes('ROLE_ADMIN');
 
   return (
-    <nav className="flex items-center justify-around w-full h-[100px] gap-8">
+    <nav className="flex items-center justify-around w-full h-[50px] gap-8">
       <AppLink to="/calculator" active={location.pathname === '/calculator'}>
         Calculateur
       </AppLink>

@@ -23,7 +23,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-transparent text-white border-b-1 border-gray-400">
+    <header className="bg-[#3C2937] text-white border-b-1 border-gray-400">
       <div className="container mx-auto py-3 px-4 flex items-center justify-between gap-x-4">
         {/* Logo / Home */}
         <HomeLink />
