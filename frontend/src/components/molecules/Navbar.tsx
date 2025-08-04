@@ -70,12 +70,7 @@ const Navbar: React.FC<Omit<NavbarProps, 'onLogout'>> = ({ isAuthenticated }) =>
           {/* <Link to="/profile" className={linkBase}>Profil</Link> */}
         </>
       ) : (
-        <>
-          <AppLink to="/auth" active={location.pathname === '/auth'} variant="primary">
-            Connexion
-          </AppLink>
-          {/* <Link to="/register" className={linkBase}>Inscription</Link> */}
-        </>
+        <></>
       )}
     </nav>
   );

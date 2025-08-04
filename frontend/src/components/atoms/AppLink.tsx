@@ -14,8 +14,7 @@ interface AppLinkProps extends LinkProps {
 }
 
 const VARIANT_CLASSES: Record<AppLinkVariant, string> = {
-  primary:
-    'bg-gray-800 hover:bg-transparent text-white hover:text-gray-800 border-gray-800 focus:ring-gray-800',
+  primary: 'bg-[#67BB69] hover:bg-transparent text-white border-[#67BB69] border-2 focus:scale-98',
   outline:
     'bg-transparent hover:bg-gray-800 text-gray-800 hover:text-white border-gray-800 focus:ring-gray-800',
   success: 'bg-green-600 hover:bg-green-700 text-white border-green-600 focus:ring-green-400',
@@ -39,8 +38,8 @@ const AppLink: React.FC<AppLinkProps> = ({
   const variantClasses = VARIANT_CLASSES[variant] || VARIANT_CLASSES.primary;
   const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.md;
   const baseClasses =
-    'font-medium rounded border focus:outline-none focus:ring-2 disabled:opacity-50 transition-colors duration-200';
-  const activeClass = active ? 'ring-2 ring-blue-400' : '';
+    'font-medium rounded border focus:outline-none focus:scale-98 disabled:opacity-50 transition-scale duration-100';
+  const activeClass = active ? 'bg-transparent text-white border-[#67BB69]' : '';
   const combinedClasses = [baseClasses, variantClasses, sizeClasses, activeClass, className]
     .filter(Boolean)
     .join(' ');

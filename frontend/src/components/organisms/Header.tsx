@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-[#3C2937] text-white border-b-1 border-gray-400">
-      <div className="container mx-auto py-3 px-4 flex items-center justify-between gap-x-4">
+      <div className="container max-w-[1200px] mx-auto py-3 px-4 flex items-center justify-between gap-x-4">
         {/* Logo / Home */}
         <HomeLink />
         {/* Navigation principale */}
@@ -33,7 +33,7 @@ const Header: React.FC = () => {
         </div>
         {/* Actions utilisateur */}
         <div className="flex-none flex items-center space-x-3">
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <>
               {/* Lien Admin - visible uniquement pour les admins */}
               {isAdmin && (
@@ -44,16 +44,14 @@ const Header: React.FC = () => {
                   Admin
                 </AppLink>
               )}
-              {/* <button
-                onClick={handleLogout}
-                className="px-3 py-2 rounded bg-white text-blue-700 font-bold hover:bg-blue-100 border border-blue-200 transition"
-              >
-                Déconnexion
-              </button> */}
               <Button onClick={handleLogout} variant="primary">
                 Déconnexion
               </Button>
             </>
+          ) : (
+            <AppLink to="/auth" active={location.pathname === '/auth'} variant="primary">
+              Connexion / Inscription
+            </AppLink>
           )}
         </div>
       </div>

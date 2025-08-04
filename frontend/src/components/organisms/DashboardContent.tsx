@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import ProfileCard from '../molecules/ProfileCard';
 import DashboardSectionCard from '../molecules/DashboardSectionCard';
 
@@ -15,27 +14,6 @@ interface DashboardContentProps {
 }
 
 const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
-  const navigate = useNavigate();
-  
-  const handleSectionClick = (section: string) => {
-    switch (section) {
-      case 'aliments':
-        navigate('/foods');
-        break;
-      case 'repas':
-        navigate('/meals');
-        break;
-      case 'plats':
-        navigate('/dishes');
-        break;
-      case 'poids':
-        navigate('/weights');
-        break;
-      default:
-
-    }
-  };
-
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -47,35 +25,43 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
         {/* Sections principales */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <DashboardSectionCard
-            title="Mes aliments"
-            description="Gérez votre base d'aliments"
-            buttonText="Gérer mes aliments"
-            buttonColor="green"
-            onButtonClick={() => handleSectionClick('aliments')}
+            title="Les aliments"
+            description="Consultez le référentiel d'aliments"
+            buttonText="Voir les aliments"
+            to="/foods"
+            variant="success"
           />
-          
+
           <DashboardSectionCard
             title="Mes repas"
             description="Enregistrez et organisez vos repas"
             buttonText="Gérer mes repas"
-            buttonColor="blue"
-            onButtonClick={() => handleSectionClick('repas')}
+            to="/meals"
+            variant="primary"
           />
-          
+
           <DashboardSectionCard
             title="Mes plats"
             description="Créez des plats composés d'aliments"
             buttonText="Gérer mes plats"
-            buttonColor="purple"
-            onButtonClick={() => handleSectionClick('plats')}
+            to="/dishes"
+            variant="outline"
           />
-          
+
           <DashboardSectionCard
             title="Suivi du poids"
             description="Suivez votre évolution corporelle"
             buttonText="Gérer mes pesées"
-            buttonColor="red"
-            onButtonClick={() => handleSectionClick('poids')}
+            to="/weights"
+            variant="danger"
+          />
+
+          <DashboardSectionCard
+            title="Mes propositions"
+            description="Consultez vos propositions d'aliment en attente"
+            buttonText="Gérer mes propositions"
+            to="/foods/my-proposals"
+            variant="danger"
           />
         </div>
       </div>
