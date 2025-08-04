@@ -6,15 +6,11 @@ import Button from '../atoms/Button';
 import HomeLink from '../molecules/HomeLink';
 
 const Header: React.FC = () => {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   // Vérification du rôle admin
-  const isAdmin =
-    user?.email === 'admin@nutrition.app' ||
-    user?.email?.includes('admin') ||
-    user?.name?.toLowerCase().includes('admin') ||
-    user?.roles?.includes('ROLE_ADMIN');
+
 
   const handleLogout = () => {
     logout();
