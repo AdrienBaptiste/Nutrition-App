@@ -19,7 +19,9 @@ interface FoodQuantityModalProps {
 
 const FoodQuantityModal: React.FC<FoodQuantityModalProps> = ({ open, food, onAdd, onClose }) => {
   const [quantity, setQuantity] = useState('');
-  React.useEffect(() => { if (open) setQuantity(''); }, [open]);
+  React.useEffect(() => {
+    if (open) setQuantity('');
+  }, [open]);
 
   if (!open || !food) return null;
 
@@ -32,11 +34,13 @@ const FoodQuantityModal: React.FC<FoodQuantityModalProps> = ({ open, food, onAdd
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-[#00000075] flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-bold">Quantité pour {food.name}</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">✕</button>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            ✕
+          </button>
         </div>
         <form onSubmit={handleSubmit}>
           <label className="block mb-2 font-medium">Quantité (en grammes)</label>
@@ -45,7 +49,7 @@ const FoodQuantityModal: React.FC<FoodQuantityModalProps> = ({ open, food, onAdd
             min={0.01}
             step={0.01}
             value={quantity}
-            onChange={e => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(e.target.value)}
             className="w-full border rounded px-3 py-2 mb-4"
             placeholder="ex: 100.25"
             autoFocus

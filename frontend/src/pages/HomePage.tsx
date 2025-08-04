@@ -20,15 +20,17 @@ const HomePage: React.FC = () => {
             <div className="space-x-4">
               <Button
                 to="/auth"
-                variant="underline"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                variant="primary"
+                size="sm"
+                className="text-white px-6 py-3 font-semibold transition border-2"
               >
                 Se connecter
               </Button>
               <Button
                 to="/calculator"
-                variant="underline"
-                className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
+                variant="secondary"
+                size="sm"
+                className="text-white px-6 py-3 font-semibold transition"
               >
                 Calculateur
               </Button>

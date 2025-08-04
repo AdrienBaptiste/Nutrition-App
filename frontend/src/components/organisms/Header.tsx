@@ -1,13 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import Navbar from '../molecules/Navbar';
 import Button from '../atoms/Button';
+import Navbar from '../molecules/Navbar';
 import HomeLink from '../molecules/HomeLink';
+import BurgerMenu from '../molecules/BurgerMenu';
 
 const Header: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Vérification du rôle admin
 
@@ -22,12 +24,12 @@ const Header: React.FC = () => {
       <div className="container max-w-[1200px] mx-auto py-3 px-4 flex items-center justify-between gap-x-4">
         {/* Logo / Home */}
         <HomeLink />
-        {/* Navigation principale */}
-        <div className="flex-1 flex justify-center">
+        {/* Navigation principale - Desktop uniquement */}
+        <div className="hidden lg:flex flex-1 justify-center">
           <Navbar isAuthenticated={isAuthenticated} />
         </div>
-        {/* Actions utilisateur */}
-        <div className="flex-none flex items-center space-x-3">
+        {/* Actions utilisateur - Desktop uniquement */}
+        <div className="hidden lg:flex flex-none items-center space-x-3">
           {isAuthenticated ? (
             <>
               <Button onClick={handleLogout} variant="primary">
@@ -45,6 +47,10 @@ const Header: React.FC = () => {
               Connexion / Inscription
             </Button>
           )}
+        </div>
+        {/* Burger Menu - Mobile uniquement */}
+        <div className="lg:hidden">
+          <BurgerMenu isAuthenticated={isAuthenticated} />
         </div>
       </div>
     </header>
