@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Navbar from '../molecules/Navbar';
 import AppLink from '../atoms/AppLink';
-import HomeLink from '../atoms/HomeLink';
+import HomeLink from '../molecules/HomeLink';
 import Button from '../atoms/Button';
 
 const Header: React.FC = () => {
