@@ -1,6 +1,7 @@
 import React from 'react';
 import ProfileCard from '../molecules/ProfileCard';
 import DashboardSectionCard from '../molecules/DashboardSectionCard';
+import { useAuth } from '../../hooks/useAuth';
 
 interface UserProfile {
   id: number;
@@ -14,6 +15,15 @@ interface DashboardContentProps {
 }
 
 const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
+  const { user } = useAuth();
+
+  // Vérification du rôle admin
+  const isAdmin =
+    user?.email === 'admin@nutrition.app' ||
+    user?.email?.includes('admin') ||
+    user?.name?.toLowerCase().includes('admin') ||
+    user?.roles?.includes('ROLE_ADMIN');
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -29,7 +39,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
             description="Consultez le référentiel d'aliments"
             buttonText="Voir les aliments"
             to="/foods"
-            variant="success"
+            variant="secondary"
           />
 
           <DashboardSectionCard
@@ -37,7 +47,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
             description="Enregistrez et organisez vos repas"
             buttonText="Gérer mes repas"
             to="/meals"
-            variant="primary"
+            variant="secondary"
           />
 
           <DashboardSectionCard
@@ -45,7 +55,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
             description="Créez des plats composés d'aliments"
             buttonText="Gérer mes plats"
             to="/dishes"
-            variant="outline"
+            variant="secondary"
           />
 
           <DashboardSectionCard
@@ -53,16 +63,30 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ profile }) => {
             description="Suivez votre évolution corporelle"
             buttonText="Gérer mes pesées"
             to="/weights"
-            variant="danger"
+            variant="secondary"
           />
+          {/* Masquer "Mes propositions" pour les admins car leurs aliments sont auto-validés */}
 
-          <DashboardSectionCard
-            title="Mes propositions"
-            description="Consultez vos propositions d'aliment en attente"
-            buttonText="Gérer mes propositions"
-            to="/foods/my-proposals"
-            variant="danger"
-          />
+          {!isAdmin && (
+            <DashboardSectionCard
+              title="Mes propositions"
+              description="Consultez vos propositions d'aliment en attente"
+              buttonText="Gérer mes propositions"
+              to="/foods/my-proposals"
+              variant="secondary"
+            />
+          )}
+
+          {/* Lien Admin - visible uniquement pour les admins */}
+          {isAdmin && (
+            <DashboardSectionCard
+              title="Administration"
+              description="Gestion des aliments"
+              buttonText="Gérer mes propositions"
+              to="/admin/food-moderation"
+              variant="secondary"
+            />
+          )}
         </div>
       </div>
     </div>

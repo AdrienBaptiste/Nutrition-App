@@ -2,9 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Navbar from '../molecules/Navbar';
-import AppLink from '../atoms/AppLink';
-import HomeLink from '../molecules/HomeLink';
 import Button from '../atoms/Button';
+import HomeLink from '../molecules/HomeLink';
 
 const Header: React.FC = () => {
   const { isAuthenticated, logout, user } = useAuth();
@@ -35,23 +34,20 @@ const Header: React.FC = () => {
         <div className="flex-none flex items-center space-x-3">
           {isAuthenticated ? (
             <>
-              {/* Lien Admin - visible uniquement pour les admins */}
-              {isAdmin && (
-                <AppLink
-                  to="/admin/food-moderation"
-                  className="px-3 py-2 rounded bg-yellow-500 text-white font-bold hover:bg-yellow-600 transition text-sm"
-                >
-                  Admin
-                </AppLink>
-              )}
               <Button onClick={handleLogout} variant="primary">
                 Déconnexion
               </Button>
             </>
           ) : (
-            <AppLink to="/auth" active={location.pathname === '/auth'} variant="primary">
+            <Button
+              to="/auth"
+              variant="primary"
+              className={
+                location.pathname === '/auth' ? 'bg-transparent border-2 border-[#67BB69]' : ''
+              }
+            >
               Connexion / Inscription
-            </AppLink>
+            </Button>
           )}
         </div>
       </div>
