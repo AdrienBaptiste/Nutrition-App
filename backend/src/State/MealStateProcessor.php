@@ -33,11 +33,6 @@ class MealStateProcessor implements ProcessorInterface
             // Récupérer l'ID depuis les paramètres d'URL (uriVariables)
             $id = $uriVariables['id'] ?? null;
             
-            // Debug temporaire
-            error_log('MealStateProcessor PUT/PATCH - ID from URL: ' . ($id ?? 'NULL'));
-            error_log('MealStateProcessor PUT/PATCH - ID from data: ' . ($data->getId() ?? 'NULL'));
-            error_log('MealStateProcessor PUT/PATCH - Name: ' . ($data->getName() ?? 'NULL'));
-            
             if (!$id) {
                 throw new \RuntimeException('Meal ID is missing from URL');
             }
@@ -46,11 +41,8 @@ class MealStateProcessor implements ProcessorInterface
             $existingMeal = $this->entityManager->find(Meal::class, $id);
             
             if (!$existingMeal) {
-                error_log('MealStateProcessor - Meal not found with ID: ' . $id);
                 throw new \RuntimeException('Meal not found');
             }
-            
-            error_log('MealStateProcessor - Found existing meal: ' . $existingMeal->getName());
             
             // Vérifier que le repas appartient à l'utilisateur connecté
             if ($existingMeal->getUser() !== $user) {
@@ -66,7 +58,7 @@ class MealStateProcessor implements ProcessorInterface
                 $existingMeal->setDate($data->getDate());
             }
             
-            error_log('MealStateProcessor - Mise à jour terminée pour: ' . $existingMeal->getName());
+
             
             // Utiliser l'entité existante mise à jour
             $data = $existingMeal;

@@ -77,12 +77,11 @@ const EditMealPage: React.FC = () => {
   const onSubmit = async (data: MealFormInputs) => {
     setServerError(undefined);
     
-    console.log('EditMealPage - ID du repas:', id);
-    console.log('EditMealPage - Données envoyées:', {
+    const payload = {
       name: data.name,
       description: data.description || null,
       date: new Date(data.date).toISOString(),
-    });
+    };
     
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals/${id}`, {
@@ -91,11 +90,7 @@ const EditMealPage: React.FC = () => {
           'Authorization': `Bearer ${jwt}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: data.name,
-          description: data.description || null,
-          date: new Date(data.date).toISOString(),
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

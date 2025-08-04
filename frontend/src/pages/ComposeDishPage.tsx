@@ -91,10 +91,10 @@ const ComposeDishPage: React.FC = () => {
 
         // Vérifier si le plat récupéré contient déjà sa composition
         if (dishData.contains && dishData.contains.length > 0) {
-          console.log('Composition from dish:', dishData.contains); // Debug temporaire
+
           setContains(dishData.contains);
         } else {
-          console.log('No composition in dish data, fetching separately...'); // Debug temporaire
+
           // Récupérer la composition du plat (contains) séparément
           const containsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/contains`, {
             headers: { 'Authorization': `Bearer ${jwt}` },
@@ -116,7 +116,7 @@ const ComposeDishPage: React.FC = () => {
               // Si c'est un objet (cas rare)
               return dishIri?.id === parseInt(id);
             });
-            console.log('Filtered contains for dish', id, ':', filteredContains); // Debug temporaire
+
             
             // Récupérer les données complètes des aliments pour chaque contain
             const containsWithFoodData = await Promise.all(
