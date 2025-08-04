@@ -1,7 +1,7 @@
 import React from 'react';
 import MainLayout from '../components/templates/MainLayout';
 import Title from '../components/atoms/Title';
-import AppLink from '../components/atoms/AppLink';
+import Button from '../components/atoms/Button';
 import Card from '../components/atoms/Card';
 
 const HomePage: React.FC = () => {
@@ -18,18 +18,22 @@ const HomePage: React.FC = () => {
               Suivez votre alimentation, gérez vos repas et atteignez vos objectifs nutritionnels
             </p>
             <div className="space-x-4">
-              <AppLink
+              <Button
                 to="/auth"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                variant="primary"
+                size="sm"
+                className="text-white px-6 py-3 font-semibold transition border-2"
               >
                 Se connecter
-              </AppLink>
-              <AppLink
+              </Button>
+              <Button
                 to="/calculator"
-                className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
+                variant="secondary"
+                size="sm"
+                className="text-white px-6 py-3 font-semibold transition"
               >
                 Calculateur
-              </AppLink>
+              </Button>
             </div>
           </div>
 
@@ -38,17 +42,18 @@ const HomePage: React.FC = () => {
             <Card>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">🍎 Aliments</h3>
               <p className="text-gray-600">
-                Gérez votre base de données d'aliments personnalisée avec leurs valeurs nutritionnelles
+                Gérez votre base de données d'aliments personnalisée avec leurs valeurs
+                nutritionnelles
               </p>
             </Card>
-            
+
             <Card>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">🍽️ Repas</h3>
               <p className="text-gray-600">
                 Planifiez et enregistrez vos repas quotidiens pour un suivi optimal
               </p>
             </Card>
-            
+
             <Card>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">📊 Suivi</h3>
               <p className="text-gray-600">
@@ -65,12 +70,12 @@ const HomePage: React.FC = () => {
             <p className="text-gray-600 mb-6">
               Créez votre compte gratuitement et commencez à suivre votre nutrition dès aujourd'hui
             </p>
-            <AppLink
+            <Button
               to="/auth"
               className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
             >
               Créer un compte
-            </AppLink>
+            </Button>
           </div>
         </div>
       </div>

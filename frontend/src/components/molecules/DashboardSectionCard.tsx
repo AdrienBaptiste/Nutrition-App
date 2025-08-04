@@ -1,39 +1,43 @@
 import React from 'react';
 import Card from '../atoms/Card';
 import Title from '../atoms/Title';
+import Button from '../atoms/Button';
 
 interface DashboardSectionCardProps {
   title: string;
   description: string;
   buttonText: string;
-  buttonColor?: 'blue' | 'green' | 'purple' | 'red';
-  onButtonClick?: () => void;
+  to?: string; // Nouvelle prop pour navigation interne
+  variant?: 'primary' | 'secondary' | 'simple' | 'underline';
+  size?: 'sm' | 'md' | 'lg';
+  onButtonClick?: () => void; // Optionnel pour action JS
+  // buttonColor est déprécié
 }
 
 const DashboardSectionCard: React.FC<DashboardSectionCardProps> = ({
   title,
   description,
   buttonText,
-  buttonColor = 'blue',
-  onButtonClick
+  to,
+  variant = 'primary',
+  size = 'md',
+  onButtonClick,
 }) => {
-  const colorClasses = {
-    blue: 'bg-blue-600 hover:bg-blue-700',
-    green: 'bg-green-600 hover:bg-green-700',
-    purple: 'bg-purple-600 hover:bg-purple-700',
-    red: 'bg-red-600 hover:bg-red-700'
-  };
-
   return (
     <Card>
-      <Title level={3} className="mb-2 text-gray-800">{title}</Title>
+      <Title level={3} className="mb-2 text-gray-800">
+        {title}
+      </Title>
       <p className="text-gray-600 mb-4">{description}</p>
-      <button
-        onClick={onButtonClick}
-        className={`${colorClasses[buttonColor]} text-white px-4 py-2 rounded transition`}
-      >
-        {buttonText}
-      </button>
+      {to ? (
+        <Button to={to} variant={variant} size={size} className="w-full block text-center mt-2">
+          {buttonText}
+        </Button>
+      ) : (
+        <Button onClick={onButtonClick} variant={variant} size={size} className="w-full mt-2">
+          {buttonText}
+        </Button>
+      )}
     </Card>
   );
 };

@@ -361,14 +361,14 @@ const AdminFoodModerationPage: React.FC = () => {
 
                     <div className="flex flex-col space-y-2 ml-6">
                       <Button
-                        variant="success"
+                        variant="secondary"
                         onClick={() => handleApprove(proposal.id)}
                         disabled={actionLoading === proposal.id}
                       >
                         {actionLoading === proposal.id ? '...' : '✓ Valider'}
                       </Button>
                       <Button
-                        variant="danger"
+                        variant="simple"
                         onClick={() => handleReject(proposal.id)}
                         disabled={actionLoading === proposal.id}
                       >

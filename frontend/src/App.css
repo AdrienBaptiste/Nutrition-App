@@ -1,9 +1,8 @@
 #root {
-  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-  text-align: center;
 }
+
 .rbc-today {
   background-color: #79f08357;
   box-shadow: inset 0px 0px 0px 3px #ffffff;

@@ -220,12 +220,12 @@ const MyFoodProposalsPage: React.FC = () => {
 
                     <div className="flex space-x-2 ml-4">
                       <Link to={`/foods/${proposal.id}/edit`}>
-                        <Button variant="outline" size="sm">
+                        <Button variant="secondary" size="sm">
                           Modifier
                         </Button>
                       </Link>
                       <Button
-                        variant="danger"
+                        variant="simple"
                         size="sm"
                         onClick={() => setPendingDeleteId(proposal.id)}
                         disabled={deletingId === proposal.id}
@@ -240,7 +240,7 @@ const MyFoodProposalsPage: React.FC = () => {
 
             <div className="mt-8 text-center">
               <Link to="/foods">
-                <Button variant="outline">Voir la base d'aliments commune</Button>
+                <Button variant="secondary">Voir la base d'aliments commune</Button>
               </Link>
             </div>
           </>

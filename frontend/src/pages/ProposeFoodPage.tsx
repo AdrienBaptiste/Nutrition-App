@@ -48,12 +48,12 @@ const ProposeFoodPage: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la proposition d\'aliment');
+        throw new Error("Erreur lors de la proposition d'aliment");
       }
 
       setSuccess(true);
       reset();
-      
+
       // Rediriger vers la page des propositions après 2 secondes
       setTimeout(() => {
         navigate('/foods/my-proposals');
@@ -78,7 +78,7 @@ const ProposeFoodPage: React.FC = () => {
       <div className="container mx-auto py-8 px-2 md:px-8">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Proposer un nouvel aliment</h1>
-          
+
           {success ? (
             <Card>
               <div className="text-center py-8">
@@ -87,11 +87,10 @@ const ProposeFoodPage: React.FC = () => {
                   Proposition envoyée avec succès !
                 </h2>
                 <p className="text-gray-600 mb-4">
-                  Votre aliment sera examiné par un administrateur avant d'être ajouté à la base commune.
+                  Votre aliment sera examiné par un administrateur avant d'être ajouté à la base
+                  commune.
                 </p>
-                <p className="text-sm text-gray-500">
-                  Redirection vers vos propositions...
-                </p>
+                <p className="text-sm text-gray-500">Redirection vers vos propositions...</p>
               </div>
             </Card>
           ) : (
@@ -102,7 +101,9 @@ const ProposeFoodPage: React.FC = () => {
                   <li>• Proposez un nouvel aliment avec ses valeurs nutritionnelles</li>
                   <li>• Votre proposition sera examinée par un administrateur</li>
                   <li>• Une fois validée, l'aliment sera disponible pour tous les utilisateurs</li>
-                  <li>• Vous pouvez suivre le statut de vos propositions dans "Mes propositions"</li>
+                  <li>
+                    • Vous pouvez suivre le statut de vos propositions dans "Mes propositions"
+                  </li>
                 </ul>
               </div>
 
@@ -119,10 +120,10 @@ const ProposeFoodPage: React.FC = () => {
                       <Input
                         label="Nom de l'aliment *"
                         placeholder="Ex: Quinoa rouge bio"
-                        {...register('name', { 
+                        {...register('name', {
                           required: 'Le nom est requis',
                           minLength: { value: 2, message: 'Minimum 2 caractères' },
-                          maxLength: { value: 50, message: 'Maximum 50 caractères' }
+                          maxLength: { value: 50, message: 'Maximum 50 caractères' },
                         })}
                         error={errors.name?.message}
                       />
@@ -134,7 +135,7 @@ const ProposeFoodPage: React.FC = () => {
                       </label>
                       <textarea
                         {...register('description', {
-                          maxLength: { value: 500, message: 'Maximum 500 caractères' }
+                          maxLength: { value: 500, message: 'Maximum 500 caractères' },
                         })}
                         placeholder="Ex: Quinoa rouge biologique, riche en protéines et sans gluten..."
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -151,11 +152,11 @@ const ProposeFoodPage: React.FC = () => {
                       step="0.1"
                       min="0"
                       placeholder="Ex: 368"
-                      {...register('calories', { 
+                      {...register('calories', {
                         required: 'Les calories sont requises',
                         min: { value: 0, message: 'Minimum 0 kcal' },
                         max: { value: 1000, message: 'Maximum 1000 kcal' },
-                        valueAsNumber: true
+                        valueAsNumber: true,
                       })}
                       error={errors.calories?.message}
                     />
@@ -166,11 +167,11 @@ const ProposeFoodPage: React.FC = () => {
                       step="0.1"
                       min="0"
                       placeholder="Ex: 14.1"
-                      {...register('protein', { 
+                      {...register('protein', {
                         required: 'Les protéines sont requises',
                         min: { value: 0, message: 'Minimum 0g' },
                         max: { value: 100, message: 'Maximum 100g' },
-                        valueAsNumber: true
+                        valueAsNumber: true,
                       })}
                       error={errors.protein?.message}
                     />
@@ -181,11 +182,11 @@ const ProposeFoodPage: React.FC = () => {
                       step="0.1"
                       min="0"
                       placeholder="Ex: 64.2"
-                      {...register('carbs', { 
+                      {...register('carbs', {
                         required: 'Les glucides sont requis',
                         min: { value: 0, message: 'Minimum 0g' },
                         max: { value: 100, message: 'Maximum 100g' },
-                        valueAsNumber: true
+                        valueAsNumber: true,
                       })}
                       error={errors.carbs?.message}
                     />
@@ -196,25 +197,21 @@ const ProposeFoodPage: React.FC = () => {
                       step="0.1"
                       min="0"
                       placeholder="Ex: 6.1"
-                      {...register('fat', { 
+                      {...register('fat', {
                         required: 'Les lipides sont requis',
                         min: { value: 0, message: 'Minimum 0g' },
                         max: { value: 100, message: 'Maximum 100g' },
-                        valueAsNumber: true
+                        valueAsNumber: true,
                       })}
                       error={errors.fat?.message}
                     />
                   </div>
 
                   <div className="flex space-x-4">
-                    <Button type="submit" disabled={loading}>
+                    <Button type="submit" variant="secondary" disabled={loading}>
                       Proposer cet aliment
                     </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      onClick={() => navigate('/foods')}
-                    >
+                    <Button type="button" variant="secondary" onClick={() => navigate('/foods')}>
                       Annuler
                     </Button>
                   </div>

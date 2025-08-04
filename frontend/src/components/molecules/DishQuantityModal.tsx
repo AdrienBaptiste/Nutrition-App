@@ -20,7 +20,9 @@ interface DishQuantityModalProps {
 
 const DishQuantityModal: React.FC<DishQuantityModalProps> = ({ open, dish, onAdd, onClose }) => {
   const [multiplier, setMultiplier] = useState('');
-  React.useEffect(() => { if (open) setMultiplier(''); }, [open]);
+  React.useEffect(() => {
+    if (open) setMultiplier('');
+  }, [open]);
 
   if (!open || !dish) return null;
 
@@ -33,11 +35,13 @@ const DishQuantityModal: React.FC<DishQuantityModalProps> = ({ open, dish, onAdd
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-[#00000075] flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-bold">Portions pour {dish.name}</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">✕</button>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            ✕
+          </button>
         </div>
         <form onSubmit={handleSubmit}>
           <label className="block mb-2 font-medium">Nombre de portions</label>
@@ -46,7 +50,7 @@ const DishQuantityModal: React.FC<DishQuantityModalProps> = ({ open, dish, onAdd
             min={0.1}
             step={0.1}
             value={multiplier}
-            onChange={e => setMultiplier(e.target.value)}
+            onChange={(e) => setMultiplier(e.target.value)}
             className="w-full border rounded px-3 py-2 mb-4"
             placeholder="ex: 1.5"
             autoFocus

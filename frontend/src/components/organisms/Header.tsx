@@ -1,21 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import Navbar from '../molecules/Navbar';
-import AppLink from '../atoms/AppLink';
-import HomeLink from '../molecules/HomeLink';
 import Button from '../atoms/Button';
+import Navbar from '../molecules/Navbar';
+import HomeLink from '../molecules/HomeLink';
+import BurgerMenu from '../molecules/BurgerMenu';
 
 const Header: React.FC = () => {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Vérification du rôle admin
-  const isAdmin =
-    user?.email === 'admin@nutrition.app' ||
-    user?.email?.includes('admin') ||
-    user?.name?.toLowerCase().includes('admin') ||
-    user?.roles?.includes('ROLE_ADMIN');
+
 
   const handleLogout = () => {
     logout();
@@ -23,38 +20,37 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-transparent text-white border-b-1 border-gray-400">
-      <div className="container mx-auto py-3 px-4 flex items-center justify-between gap-x-4">
+    <header className="bg-[#3C2937] text-white border-b-1 border-gray-400">
+      <div className="container max-w-[1200px] mx-auto py-3 px-4 flex items-center justify-between gap-x-4">
         {/* Logo / Home */}
         <HomeLink />
-        {/* Navigation principale */}
-        <div className="flex-1 flex justify-center">
+        {/* Navigation principale - Desktop uniquement */}
+        <div className="hidden lg:flex flex-1 justify-center">
           <Navbar isAuthenticated={isAuthenticated} />
         </div>
-        {/* Actions utilisateur */}
-        <div className="flex-none flex items-center space-x-3">
-          {isAuthenticated && (
+        {/* Actions utilisateur - Desktop uniquement */}
+        <div className="hidden lg:flex flex-none items-center space-x-3">
+          {isAuthenticated ? (
             <>
-              {/* Lien Admin - visible uniquement pour les admins */}
-              {isAdmin && (
-                <AppLink
-                  to="/admin/food-moderation"
-                  className="px-3 py-2 rounded bg-yellow-500 text-white font-bold hover:bg-yellow-600 transition text-sm"
-                >
-                  Admin
-                </AppLink>
-              )}
-              {/* <button
-                onClick={handleLogout}
-                className="px-3 py-2 rounded bg-white text-blue-700 font-bold hover:bg-blue-100 border border-blue-200 transition"
-              >
-                Déconnexion
-              </button> */}
               <Button onClick={handleLogout} variant="primary">
                 Déconnexion
               </Button>
             </>
+          ) : (
+            <Button
+              to="/auth"
+              variant="primary"
+              className={
+                location.pathname === '/auth' ? 'bg-transparent border-2 border-[#67BB69]' : ''
+              }
+            >
+              Connexion / Inscription
+            </Button>
           )}
+        </div>
+        {/* Burger Menu - Mobile uniquement */}
+        <div className="lg:hidden">
+          <BurgerMenu isAuthenticated={isAuthenticated} />
         </div>
       </div>
     </header>
