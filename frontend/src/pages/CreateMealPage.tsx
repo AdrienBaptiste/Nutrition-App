@@ -23,19 +23,19 @@ const CreateMealPage: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<MealFormInputs>({
     defaultValues: {
-      date: new Date().toISOString().slice(0, 16) // Format YYYY-MM-DDTHH:MM
-    }
+      date: new Date().toISOString().slice(0, 16), // Format YYYY-MM-DDTHH:MM
+    },
   });
   const [serverError, setServerError] = useState<string | undefined>(undefined);
 
   const onSubmit = async (data: MealFormInputs) => {
     setServerError(undefined);
-    
+
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${jwt}`,
+          Authorization: `Bearer ${jwt}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -50,7 +50,9 @@ const CreateMealPage: React.FC = () => {
           setServerError('Session expirée. Veuillez vous reconnecter.');
         } else if (response.status === 400) {
           const result = await response.json();
-          setServerError(result.error?.[0] || result.error || 'Données invalides. Vérifiez vos informations.');
+          setServerError(
+            result.error?.[0] || result.error || 'Données invalides. Vérifiez vos informations.'
+          );
         } else {
           setServerError(`Erreur serveur (${response.status}). Veuillez réessayer plus tard.`);
         }
@@ -70,7 +72,9 @@ const CreateMealPage: React.FC = () => {
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Nouveau Repas</h1>
-            <p className="text-gray-600">Enregistrez un nouveau repas dans votre journal alimentaire.</p>
+            <p className="text-gray-600">
+              Enregistrez un nouveau repas dans votre journal alimentaire.
+            </p>
           </div>
 
           <Card>
@@ -80,9 +84,9 @@ const CreateMealPage: React.FC = () => {
                   label="Nom du repas"
                   type="text"
                   placeholder="Ex: Petit-déjeuner, Déjeuner, Collation..."
-                  {...register('name', { 
+                  {...register('name', {
                     required: 'Le nom est requis',
-                    maxLength: { value: 50, message: 'Maximum 50 caractères' }
+                    maxLength: { value: 50, message: 'Maximum 50 caractères' },
                   })}
                   error={errors.name?.message}
                 />
@@ -102,8 +106,8 @@ const CreateMealPage: React.FC = () => {
                 <Input
                   label="Date et heure"
                   type="datetime-local"
-                  {...register('date', { 
-                    required: 'La date est requise'
+                  {...register('date', {
+                    required: 'La date est requise',
                   })}
                   error={errors.date?.message}
                 />
@@ -112,14 +116,10 @@ const CreateMealPage: React.FC = () => {
               <ErrorMessage message={serverError} />
 
               <div className="flex justify-between pt-4">
-                <button
-                  type="button"
-                  onClick={() => navigate('/meals')}
-                  className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
-                >
+                <Button type="button" onClick={() => navigate('/meals')} variant="secondary">
                   Annuler
-                </button>
-                <Button type="submit" disabled={isSubmitting}>
+                </Button>
+                <Button type="submit" disabled={isSubmitting} variant="primary">
                   {isSubmitting ? 'Enregistrement...' : 'Enregistrer le repas'}
                 </Button>
               </div>
