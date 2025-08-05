@@ -17,7 +17,7 @@ const HomeLink: React.FC<HomeLinkProps> = ({
   return (
     <Link
       to="/"
-      className={`flex items-center hover:opacity-80 text-[#67BB69] max-w-[120px] transition-opacity duration-200 ${className}`.trim()}
+      className={`flex items-center hover:opacity-80 text-white hover:text-[#67BB69] max-w-[120px] transition-all duration-300 ${className}`.trim()}
     >
       {/*
       <Image
