@@ -36,8 +36,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: nutrition_app_db
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: symfony
+      MYSQL_USER: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -50,7 +50,9 @@ services:
       - "8080:80" # http://localhost:8080
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: root
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ""
     depends_on:
       - db
     networks:
