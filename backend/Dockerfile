@@ -37,7 +37,7 @@ RUN a2dissite 000-default && a2ensite 000-default
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
 # Installer les dépendances
-RUN composer install --prefer-dist --no-interaction
+RUN composer install --no-scripts --prefer-dist --no-interaction
 
 # ✅ Copier ton script entrypoint
 COPY entrypoint.sh /entrypoint.sh

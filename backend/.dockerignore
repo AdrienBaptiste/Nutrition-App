@@ -1,0 +1,15 @@
+# Dépendances PHP
+/vendor
+
+# Fichiers d'environnement : ignorer tous sauf `.env` et `.env.example`
+!.env
+.env.*
+!.env.example
+
+# Cache & logs Symfony
+/var/cache
+/var/log
+
+# Fichiers divers à exclure
+*.log
+.DS_Store

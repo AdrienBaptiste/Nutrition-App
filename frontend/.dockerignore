@@ -1,0 +1,15 @@
+# Exclure les dépendances
+node_modules
+
+# Exclure les fichiers générés
+dist
+.vite
+
+# Exclure les fichiers d'environnement sauf le placeholder de base et l'exemple
+!.env
+.env.*
+!.env.example
+
+# Autres fichiers à ignorer
+*.log
+.DS_Store
