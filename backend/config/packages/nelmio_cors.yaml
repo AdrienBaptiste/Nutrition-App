@@ -4,6 +4,7 @@ nelmio_cors:
         allow_origin:
             [
                 "http://localhost:5173",
+                "http://localhost:3000",
                 "https://nutrition-app-steel.vercel.app",
                 "https://nutrition-app-steel-preprod.vercel.app",
             ]
@@ -16,6 +17,7 @@ nelmio_cors:
             allow_origin:
                 [
                     "http://localhost:5173",
+                    "http://localhost:3000",
                     "https://nutrition-app-steel.vercel.app",
                     "https://nutrition-app-steel-preprod.vercel.app",
                 ]

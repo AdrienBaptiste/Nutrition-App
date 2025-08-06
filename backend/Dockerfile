@@ -1,24 +1,52 @@
-FROM php:8.4.8-fpm
+# Utiliser PHP 8.4.8 avec Apache
+FROM php:8.4.8-apache
 
-# Set working dir
-WORKDIR /var/www
+# Activer les modules Apache nécessaires
+RUN a2enmod rewrite
 
-# Install system deps
+# Installer les extensions PHP nécessaires
 RUN apt-get update && apt-get install -y \
-    git unzip curl libicu-dev libonig-dev libzip-dev libpq-dev libxml2-dev libpng-dev \
-    && docker-php-ext-install intl pdo pdo_mysql zip opcache
+    libicu-dev \
+    libzip-dev \
+    unzip \
+    git \
+    nano \
+    && docker-php-ext-install \
+    intl \
+    pdo \
+    pdo_mysql \
+    zip \
+    opcache
 
-# Install Composer
+# Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy files
+# Définir le répertoire de travail
+WORKDIR /var/www/html
+
+# Copier les fichiers du projet Symfony
 COPY . .
 
-# Install Symfony deps
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+# Copier la configuration Apache personnalisée (si tu en as une)
+COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Permissions (optionnel)
-RUN chown -R www-data:www-data /var/www
+# Activer ta conf Apache
+RUN a2dissite 000-default && a2ensite 000-default
 
-EXPOSE 9000
-CMD ["php-fpm"]
+# Fixer les permissions pour Apache
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+
+# Installer les dépendances
+RUN composer install --prefer-dist --no-interaction
+
+# ✅ Copier ton script entrypoint
+COPY entrypoint.sh /entrypoint.sh
+
+# ✅ Rendre le script exécutable
+RUN chmod +x /entrypoint.sh
+
+# ✅ Définir le script comme point d’entrée
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Exposer le port Apache
+EXPOSE 80
