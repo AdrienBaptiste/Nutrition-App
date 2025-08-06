@@ -2,7 +2,7 @@ services:
   frontend:
     build: ./frontend
     env_file:
-      - ./frontend/.env.prod
+      - ./frontend/.env.production
     ports:
       - "3000:4173" # Vite:4173 exposé sur http://localhost:3000
     depends_on:
