@@ -31,6 +31,8 @@ services:
     image: mysql:8.0
     container_name: mysql
     restart: always
+    ports:
+      - "3306:3306" # MySQL exposé sur http://localhost:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: nutrition_app_db
