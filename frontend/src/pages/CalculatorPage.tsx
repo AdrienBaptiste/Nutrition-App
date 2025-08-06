@@ -6,6 +6,7 @@ import DishSelectModal from '../components/molecules/DishSelectModal';
 import FoodQuantityModal from '../components/molecules/FoodQuantityModal';
 import DishQuantityModal from '../components/molecules/DishQuantityModal';
 import { useAuth } from '../hooks/useAuth';
+import Button from '../components/atoms/Button';
 // Types pour un aliment et un plat
 interface CalculatorFood {
   id: number;
@@ -59,7 +60,9 @@ const CalculatorPage: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const headers: Record<string, string> | undefined = jwt ? { Authorization: `Bearer ${jwt}` } : undefined;
+        const headers: Record<string, string> | undefined = jwt
+          ? { Authorization: `Bearer ${jwt}` }
+          : undefined;
         const [foodsRes, dishesRes] = await Promise.all([
           fetch(`${import.meta.env.VITE_API_URL}/api/v1/foods`, { headers }),
           fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes`, { headers }),
@@ -70,16 +73,23 @@ const CalculatorPage: React.FC = () => {
         // Correction: fetch la nutrition réelle de chaque plat
         const dishesList = Array.isArray(dishesData) ? dishesData : dishesData.member || [];
         type APIDish = CalculatorDish & { '@id'?: string; id?: number };
-const dishesWithNutrition = await Promise.all(
+        const dishesWithNutrition = await Promise.all(
           dishesList.map(async (dish: APIDish) => {
             // Correction : parse id depuis @id si besoin
-            const id = dish.id ?? (typeof dish['@id'] === 'string' ? Number(dish['@id'].split('/').pop()) : undefined);
+            const id =
+              dish.id ??
+              (typeof dish['@id'] === 'string' ? Number(dish['@id'].split('/').pop()) : undefined);
             if (!id) return null;
             try {
-              const headers: Record<string, string> | undefined = jwt ? { Authorization: `Bearer ${jwt}` } : undefined;
-              const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}/nutrition`, {
-                headers,
-              });
+              const headers: Record<string, string> | undefined = jwt
+                ? { Authorization: `Bearer ${jwt}` }
+                : undefined;
+              const res = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/v1/dishes/${id}/nutrition`,
+                {
+                  headers,
+                }
+              );
               if (!res.ok) throw new Error('Erreur nutrition');
               const nutrition = await res.json();
               return {
@@ -117,55 +127,77 @@ const dishesWithNutrition = await Promise.all(
   // Calcul des totaux
   const totals = {
     calories:
-      selectedFoods.reduce((sum: number, f: SelectedFood) => sum + (f.calories * f.quantity) / 100, 0) +
-      selectedDishes.reduce((sum: number, d: SelectedDish) => sum + d.nutrition.calories * d.multiplier, 0),
+      selectedFoods.reduce(
+        (sum: number, f: SelectedFood) => sum + (f.calories * f.quantity) / 100,
+        0
+      ) +
+      selectedDishes.reduce(
+        (sum: number, d: SelectedDish) => sum + d.nutrition.calories * d.multiplier,
+        0
+      ),
     protein:
-      selectedFoods.reduce((sum: number, f: SelectedFood) => sum + (f.protein * f.quantity) / 100, 0) +
-      selectedDishes.reduce((sum: number, d: SelectedDish) => sum + d.nutrition.protein * d.multiplier, 0),
+      selectedFoods.reduce(
+        (sum: number, f: SelectedFood) => sum + (f.protein * f.quantity) / 100,
+        0
+      ) +
+      selectedDishes.reduce(
+        (sum: number, d: SelectedDish) => sum + d.nutrition.protein * d.multiplier,
+        0
+      ),
     carbs:
-      selectedFoods.reduce((sum: number, f: SelectedFood) => sum + (f.carbs * f.quantity) / 100, 0) +
-      selectedDishes.reduce((sum: number, d: SelectedDish) => sum + d.nutrition.carbs * d.multiplier, 0),
+      selectedFoods.reduce(
+        (sum: number, f: SelectedFood) => sum + (f.carbs * f.quantity) / 100,
+        0
+      ) +
+      selectedDishes.reduce(
+        (sum: number, d: SelectedDish) => sum + d.nutrition.carbs * d.multiplier,
+        0
+      ),
     fat:
       selectedFoods.reduce((sum: number, f: SelectedFood) => sum + (f.fat * f.quantity) / 100, 0) +
-      selectedDishes.reduce((sum: number, d: SelectedDish) => sum + d.nutrition.fat * d.multiplier, 0),
+      selectedDishes.reduce(
+        (sum: number, d: SelectedDish) => sum + d.nutrition.fat * d.multiplier,
+        0
+      ),
   };
 
   // DEBUG LOGS
 
-
-
-
   return (
     <MainLayout>
       <div className="container mx-auto py-8 px-4">
-        <Title level={1} className="mb-8">Calculateur nutritionnel</Title>
+        <Title level={1} className="mb-8">
+          Calculateur nutritionnel
+        </Title>
         {loading && <div className="text-center text-gray-500 mb-4">Chargement...</div>}
         {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>}
         {/* Boutons d'ajout */}
-        <div className="flex gap-4 mb-8">
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-semibold"
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <Button
             onClick={() => setFoodModalOpen(true)}
+            variant="secondary"
+            size="md"
           >
             + Ajouter un aliment
-          </button>
+          </Button>
           {user && (
-            <button
-              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 font-semibold"
+            <Button
               onClick={() => setDishModalOpen(true)}
+              variant="secondary"
+              size="md"
             >
               + Ajouter un plat
-            </button>
+            </Button>
           )}
         </div>
         {/* Cards des aliments/plats sélectionnés */}
         <div className="mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {selectedFoods.map(f => (
+          {selectedFoods.map((f) => (
             <div key={'f-' + f.id} className="bg-blue-50 rounded p-4 flex flex-col relative">
               <button
                 className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-xl font-bold focus:outline-none"
                 title="Supprimer cet aliment"
-                onClick={() => setSelectedFoods(prev => prev.filter(food => food.id !== f.id))}
+                onClick={() => setSelectedFoods((prev) => prev.filter((food) => food.id !== f.id))}
                 aria-label={`Supprimer ${f.name}`}
               >
                 ×
@@ -174,12 +206,12 @@ const dishesWithNutrition = await Promise.all(
               <div className="text-sm text-gray-600">Quantité : {f.quantity}g</div>
             </div>
           ))}
-          {selectedDishes.map(d => (
+          {selectedDishes.map((d) => (
             <div key={'d-' + d.id} className="bg-purple-50 rounded p-4 flex flex-col relative">
               <button
                 className="absolute top-2 right-2 text-gray-400 hover:text-red-600 text-xl font-bold focus:outline-none"
                 title="Supprimer ce plat"
-                onClick={() => setSelectedDishes(prev => prev.filter(dish => dish.id !== d.id))}
+                onClick={() => setSelectedDishes((prev) => prev.filter((dish) => dish.id !== d.id))}
                 aria-label={`Supprimer ${d.name}`}
               >
                 ×
@@ -206,7 +238,7 @@ const dishesWithNutrition = await Promise.all(
           food={selectedFood}
           onAdd={(food: CalculatorFood, quantity: number) => {
             // Merge tout le CalculatorFood pour garantir le typage
-            setSelectedFoods(prev => [...prev, { ...food, quantity } as SelectedFood]);
+            setSelectedFoods((prev) => [...prev, { ...food, quantity } as SelectedFood]);
             setFoodQtyModalOpen(false);
             setSelectedFood(null);
           }}
@@ -235,10 +267,7 @@ const dishesWithNutrition = await Promise.all(
               multiplier,
             };
 
-            setSelectedDishes(prev => [
-              ...prev,
-              added,
-            ]);
+            setSelectedDishes((prev) => [...prev, added]);
             setDishQtyModalOpen(false);
             setSelectedDish(null);
           }}

@@ -4,6 +4,7 @@ import MainLayout from '../components/templates/MainLayout';
 import LoadingSpinner from '../components/atoms/LoadingSpinner';
 import Card from '../components/atoms/Card';
 import { useAuth } from '../hooks/useAuth';
+import Button from '../components/atoms/Button';
 
 interface Meal {
   id: number;
@@ -30,7 +31,7 @@ const MealsPage: React.FC = () => {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${jwt}`,
+            Authorization: `Bearer ${jwt}`,
             'Content-Type': 'application/json',
           },
         });
@@ -45,9 +46,9 @@ const MealsPage: React.FC = () => {
         }
 
         const data = await response.json();
-        
+
         // API Platform retourne les données dans data.member
-        const meals = Array.isArray(data) ? data : (data.member || []);
+        const meals = Array.isArray(data) ? data : data.member || [];
         setMeals(meals);
       } catch {
         setError('Erreur réseau. Vérifiez votre connexion.');
@@ -68,12 +69,12 @@ const MealsPage: React.FC = () => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/meals/${id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${jwt}`,
+          Authorization: `Bearer ${jwt}`,
         },
       });
 
       if (response.ok) {
-        setMeals(meals.filter(meal => meal.id !== id));
+        setMeals(meals.filter((meal) => meal.id !== id));
       } else {
         alert('Erreur lors de la suppression');
       }
@@ -88,7 +89,7 @@ const MealsPage: React.FC = () => {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -121,12 +122,9 @@ const MealsPage: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800">Mes Repas</h1>
-            <Link
-              to="/meals/new"
-              className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-            >
+            <Button to="/meals/new" variant="primary">
               Nouveau Repas
-            </Link>
+            </Button>
           </div>
 
           {meals.length === 0 ? (
@@ -163,16 +161,16 @@ const MealsPage: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                  
+
                   {meal.description && (
                     <p className="text-gray-600 text-sm mb-3">{meal.description}</p>
                   )}
-                  
+
                   <div className="text-sm text-gray-500 mb-3">
                     <span className="font-medium">Date:</span>
                     <span className="ml-1">{formatDate(meal.date)}</span>
                   </div>
-                  
+
                   <div className="mt-3 pt-3 border-t">
                     <Link
                       to={`/meals/${meal.id}/compose`}
