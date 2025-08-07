@@ -1,0 +1,62 @@
+services:
+  frontend:
+    image: gramaryllis/nutrition-app-frontend:latest
+    env_file:
+      - ./frontend/.env.production
+    ports:
+      - "3000:80" # Vite:80 exposé sur http://localhost:3000
+    depends_on:
+      - backend
+    networks:
+      - nutrition-app-network
+
+  backend:
+    image: gramaryllis/nutrition-app-backend:latest
+    env_file:
+      - ./backend/.env.prod
+    environment:
+      FORCE_JWT_REGEN: 1
+    ports:
+      - "8000:80" # Symfony exposé sur http://localhost:8000
+    depends_on:
+      - nutrition_app_db
+    networks:
+      - nutrition-app-network
+
+  nutrition_app_db:
+    image: mysql:8.0
+    container_name: nutrition_app_mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nutrition_app_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - nutrition-app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: nutrition_app_db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - nutrition_app_db
+    networks:
+      - nutrition-app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  nutrition-app-network:
+    driver: bridge

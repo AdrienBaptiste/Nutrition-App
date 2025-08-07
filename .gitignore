@@ -48,7 +48,6 @@
 **/.docker.env
 **/docker-compose.override.yml
 **/docker-compose.local.yml
-**/docker-compose.*.yml
 
 # Volumes or bind mounts
 /docker/volumes
