@@ -1,7 +1,29 @@
 # 🍽️ Nutrition App
-The ultimate final projet to get my diploma and to become the best version of myself. I have 1 month.
 
-Projet fullstack avec un frontend React (Vite), un backend Symfony, une base MySQL et une configuration Docker pour le développement.
+> 🎓 Projet final fullstack pour l’obtention de mon diplôme. Objectif : construire une stack professionnelle en 1 mois.
+
+App web avec un **frontend React (Vite)**, un **backend Symfony**, une **base MySQL**, orchestrée avec **Docker** en développement, et déployée sur des services professionnels.
+
+---
+
+## 🌍 Hébergement en production
+
+### ✅ **Frontend (React)**
+
+- Hébergés et déployée sur [Vercel](https://vercel.com)
+
+| Service                  | Branche | URL                                            |
+| ------------------------ | ------- | ---------------------------------------------- |
+| Production               | main    | https://nutrition-app-steel.vercel.app/        |
+| Préproduction (protégée) | preprod | https://nutrition-app-steel-preprod.vercel.app |
+
+### ✅ **Backend & BDD**
+
+- Hébergés sur [AlwaysData](https://www.alwaysdata.com)
+  - Symfony API
+  - MySQL
+
+Les clés JWT, la base de données et les environnements `.env` sont configurés pour respecter les contraintes de prod.
 
 ---
 
@@ -11,133 +33,175 @@ Projet fullstack avec un frontend React (Vite), un backend Symfony, une base MyS
 .
 ├── backend/              # API Symfony
 ├── frontend/             # Application React (Vite)
-├── docker-compose.yml    # Orchestration Docker
-├── .vscode/              # Configuration VS Code (formatage, linting)
-├── .gitignore
+├── docker-compose.yml    # Docker orchestration
+├── .vscode/              # Configuration VS Code
+├── .github/workflows/    # WWorkflow GitHub Actions
 └── README.md
+└── WORKFLOW.md
+└── COMMIT_GUIDE.md
 ```
 
 ---
 
-## 🚀 Démarrage rapide
+## 🐳 Déploiement local via Docker
 
-### 🧱 Prérequis
+L’environnement local utilise **Docker** avec les **images buildées** et **push sur DockerHub**, simulant un environnement de production.
 
-- [Docker](https://www.docker.com/)
-- [Node.js (>=18)](https://nodejs.org/)
-- [npm](https://www.npmjs.com/) ou [pnpm](https://pnpm.io/)
-- (optionnel) [Symfony CLI](https://symfony.com/download)
-
----
-
-### 🔧 Installation locale
-
-1. **Cloner le repo**
+### 1. 🔃 Récupération du projet
 
 ```bash
-git clone <url-du-repo>
-cd <nom-du-projet>
+git clone https://github.com/AdrienBaptiste/Nutrition-App
+cd Nutrition-App
 ```
 
-2. **Lancer les conteneurs Docker**
+### 2. 🐳 Lancement avec DockerHub
+
+Copier les fichiers d'environement sous un nouveau nom :
 
 ```bash
-docker-compose up -d --build
+cp backend/.env.example backend/.env.prod
+cp frontend/.env.example frontend/.env.production
 ```
 
-3. **Installer les dépendances**
-
-#### Frontend (React + Vite)
+Lancer le projet avec les images DockerHub :
 
 ```bash
-cd frontend
-npm install
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
-#### Backend (Symfony)
+### 3. Accès aux services
 
-```bash
-cd backend
-composer install
-```
+| Service       | URL                   |
+| ------------- | --------------------- |
+| Frontend      | http://localhost:3000 |
+| Backend (API) | http://localhost:8000 |
+| phpMyAdmin    | http://localhost:8080 |
 
 ---
 
 ## 🧪 Développement
 
-### Frontend
+> En mode développement manuel (hors Docker), tu peux toujours lancer les services indépendamment :
+
+### 🔧 Frontend
 
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-### Backend
+### 🔧 Backend
 
 ```bash
 cd backend
+composer install
 symfony serve
 ```
 
 ---
 
-## 🧹 Lint & Format
+## 🔐 JWT / Auth
 
-Le projet utilise **ESLint (Flat config)** et **Prettier** pour un code propre et cohérent.
+- Les clés JWT sont générées dans `config/jwt/` dans le container Docker.
+- En dev local : tu peux les générer avec :
 
-### ➕ Dépendances installées
+```bash
+php bin/console lexik:jwt:generate-keypair
+```
 
-- ESLint
-- eslint-plugin-react
-- eslint-plugin-react-hooks
-- eslint-plugin-import
-- eslint-plugin-react-refresh
-- typescript-eslint
-- Prettier
+> Assure-toi que les droits sont corrects sur les fichiers `.pem`
 
-### 📦 Scripts disponibles
+---
 
-Dans `frontend/package.json` :
+## ⚙️ Fichiers d’environnement requis
 
-```json
-"scripts": {
-  "lint": "eslint .",
-  "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\""
-}
+### frontend/.env
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+### backend/.env.local
+
+```env
+DATABASE_URL="mysql://admin:admin@db:3306/nutrition_app_db?serverVersion=8.0&charset=utf8mb4"
+JWT_PASSPHRASE=your_passphrase
+```
+
+Des fichiers `.env.example` sont disponibles dans chaque dossier.
+
+---
+
+## 🚀 Build & Push des images (optionnel pour mise à jour DockerHub)
+
+### Build des images
+
+```bash
+docker build -t tonuserdockerhub/frontend ./frontend
+docker build -t tonuserdockerhub/backend ./backend
+```
+
+### Push sur DockerHub
+
+```bash
+docker push tonuserdockerhub/frontend
+docker push tonuserdockerhub/backend
 ```
 
 ---
 
-## 🧠 VS Code – Recommandations
+## 📦 Lint & Format (frontend)
 
-Le projet inclut une config VS Code partagée (`.vscode/`) :
+```bash
+# Linter
+npm run lint
 
-- 📄 `settings.json` : Formatage automatique, intégration ESLint
-- 📄 `extensions.json` : Recommandation d'extensions utiles
+# Formatage automatique
+npm run format
+```
 
-### 🔧 Extensions recommandées
-
-> Si tu ouvres le projet avec **VS Code** ou autre IDE basé sur VS Code, une popup te proposera ces extensions :
-
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Prettier - Code Formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+> Configuré avec **ESLint** (Flat Config) et **Prettier**
 
 ---
 
-## 🛠️ Variables d’environnement
+## 🧠 VS Code – Configuration
 
-Ajoute les fichiers suivants :
+Fichier `.vscode/settings.json` intégré :
 
-- `frontend/.env` ➝ base Vite (`VITE_API_URL=...`)
-- `backend/.env.local` ➝ Symfony secrets
-
-Des fichiers `.env.example` sont à disposition dans chaque dossier.
+- Formatage auto
+- ESLint & Prettier intégrés
 
 ---
 
-## ⚙️ Docker Services
+## ✅ Check rapide avant push
 
-- **frontend** : React App (port 5173)
-- **backend** : Symfony API (port 8000)
-- **mysql** : base de données (port 3306)
-- **phpmyadmin** : interface pour gérer la base de données (port 8080)
+- [ ] `.env` présent dans `frontend` et `backend`
+- [ ] Clés JWT dans `backend/config/jwt/`
+- [ ] Frontend buildé si nécessaire
+- [ ] Test des routes API avec Postman / Front
+
+---
+
+## 🛠 Commandes de déploiement local complètes
+
+```bash
+# Lancer Docker
+docker compose up -d
+
+# Accéder à phpMyAdmin si besoin
+# http://localhost:8080 (login: admin / admin)
+
+# Générer les clés JWT (si manquantes)
+docker exec -it <container_backend> bash
+php bin/console lexik:jwt:generate-keypair
+
+# Vérifier l’état des conteneurs
+docker ps
+```
+
+---
+
+## 👨‍💻 Auteur
+
+Made with love and coffee by **@AdrienBaptiste**
