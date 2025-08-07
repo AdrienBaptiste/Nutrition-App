@@ -36,9 +36,6 @@
 /backend/var/log/
 /backend/var/cache/
 
-# Doctrine generated files
-/backend/migrations/*
-
 # --- DATABASE ---
 /docker/mysql/data/
 /docker/db/data/

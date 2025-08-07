@@ -1,34 +1,62 @@
 services:
-  mysql:
+  frontend:
+    build: ./frontend
+    env_file:
+      - ./frontend/.env.production
+    ports:
+      - "3000:80" # Vite:80 exposé sur http://localhost:3000
+    depends_on:
+      - backend
+    networks:
+      - nutrition-app-network
+
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env.prod
+    environment:
+      FORCE_JWT_REGEN: 1
+    ports:
+      - "8000:80" # Symfony exposé sur http://localhost:8000
+    depends_on:
+      - nutrition_app_db
+    networks:
+      - nutrition-app-network
+
+  nutrition_app_db:
     image: mysql:8.0
-    container_name: nutritionapp-mysql
+    container_name: nutrition_app_mysql
     restart: always
+    ports:
+      - "3306:3306" # MySQL exposé sur http://localhost:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nutrition_app
-    ports:
-      - "3306:3306"
+      MYSQL_DATABASE: nutrition_app_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - mysql_data:/var/lib/mysql
+    networks:
+      - nutrition-app-network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: nutritionapp-phpmyadmin
     restart: always
+    ports:
+      - "8080:80" # http://localhost:8080
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: nutrition_app_db
+      PMA_PORT: 3306
       PMA_USER: root
       PMA_PASSWORD: root
-    ports:
-      - "8080:80"
     depends_on:
-      - mysql
+      - nutrition_app_db
+    networks:
+      - nutrition-app-network
 
 volumes:
-  db_data:
-    driver: local
+  mysql_data:
+
+networks:
+  nutrition-app-network:
+    driver: bridge
