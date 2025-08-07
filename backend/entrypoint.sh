@@ -27,6 +27,10 @@ echo "🧹 Nettoyage du cache Symfony..."
 php bin/console cache:clear --no-warmup --no-interaction || true
 php bin/console cache:clear --env=prod || true
 
+# 🛠️ Exécution des migrations Doctrine
+echo "🛠️ Exécution des migrations de base de données..."
+php bin/console doctrine:migrations:migrate --no-interaction || true
+
 # 🚀 Lancement du serveur Apache
 echo "🚀 Démarrage d'Apache..."
 exec apache2-foreground
