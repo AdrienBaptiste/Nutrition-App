@@ -5,9 +5,13 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Weight;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProcessorInterface<Weight, Weight|null>
+ */
 class WeightStateProcessor implements ProcessorInterface
 {
     public function __construct(
@@ -20,6 +24,9 @@ class WeightStateProcessor implements ProcessorInterface
         $user = $this->security->getUser();
         
         if (!$user || !$data instanceof Weight) {
+            throw new \RuntimeException('Access denied');
+        }
+        if (!$user instanceof User) {
             throw new \RuntimeException('Access denied');
         }
 

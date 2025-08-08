@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimit;
 
 class RateLimitSubscriber implements EventSubscriberInterface
 {
@@ -104,10 +105,9 @@ class RateLimitSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param object $limit Object with methods getRetryAfter(), getLimit(), getRemainingTokens()
      * @param null|string $context
      */
-    private function throwRateLimitException(object $limit, ?string $context = null): void
+    private function throwRateLimitException(RateLimit $limit, ?string $context = null): void
     {
         $retryAfter = $limit->getRetryAfter();
 
@@ -137,9 +137,8 @@ class RateLimitSubscriber implements EventSubscriberInterface
 
     /**
      * @param Request $request
-     * @param object $limit Object with methods getRetryAfter(), getLimit(), getRemainingTokens()
      */
-    private function addRateLimitHeaders(Request $request, object $limit): void
+    private function addRateLimitHeaders(Request $request, RateLimit $limit): void
     {
         $retryAfter = $limit->getRetryAfter();
         

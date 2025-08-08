@@ -79,6 +79,10 @@ class AuthController extends AbstractController
             return $this->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
+        if (!$user instanceof User) {
+            return $this->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         // Retourne uniquement les infos non sensibles
         return $this->json([
             'id' => $user->getId(),

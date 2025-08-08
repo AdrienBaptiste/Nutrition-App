@@ -19,6 +19,9 @@ class NutritionCalculator
      * Formule : valeur_nutritionnelle_aliment * (quantité / 100)
      * Exemple : 52 kcal/100g * 150g/100 = 78 kcal pour 150g
      */
+    /**
+     * @return array{calories: float, protein: float, carbs: float, fat: float}
+     */
     public function calculateDishNutrition(Dish $dish): array
     {
         $totals = ['calories' => 0, 'protein' => 0, 'carbs' => 0, 'fat' => 0];
@@ -43,6 +46,9 @@ class NutritionCalculator
      * Pour chaque plat, appelle calculateDishNutrition pour obtenir la nutrition d'une portion,
      * puis multiplie par le nombre de portions.
      * Les totaux sont arrondis à 2 décimales pour l'affichage.
+     */
+    /**
+     * @return array{calories: float, protein: float, carbs: float, fat: float}
      */
     public function calculateMealNutrition(Meal $meal): array
     {

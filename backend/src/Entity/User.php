@@ -90,9 +90,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
+    /**
+     * @return non-empty-string
+     */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        $email = (string) $this->email;
+        if ($email === '') {
+            // Guarantee non-empty per Symfony's contract
+            return 'unknown';
+        }
+        return $email;
     }
 
     /**

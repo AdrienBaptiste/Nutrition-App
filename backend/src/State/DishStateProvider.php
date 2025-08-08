@@ -8,6 +8,9 @@ use App\Entity\Dish;
 use App\Repository\DishRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProviderInterface<Dish>
+ */
 class DishStateProvider implements ProviderInterface
 {
     public function __construct(

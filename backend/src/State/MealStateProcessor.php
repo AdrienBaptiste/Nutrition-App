@@ -5,9 +5,13 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Meal;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProcessorInterface<Meal, Meal|null>
+ */
 class MealStateProcessor implements ProcessorInterface
 {
     public function __construct(
@@ -20,6 +24,9 @@ class MealStateProcessor implements ProcessorInterface
         $user = $this->security->getUser();
         
         if (!$user || !$data instanceof Meal) {
+            throw new \RuntimeException('Access denied');
+        }
+        if (!$user instanceof User) {
             throw new \RuntimeException('Access denied');
         }
 
