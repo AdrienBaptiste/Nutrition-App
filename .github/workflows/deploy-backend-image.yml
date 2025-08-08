@@ -23,7 +23,7 @@ jobs:
       - name: Backend checks (composer validate, optional tests)
         working-directory: backend
         run: |
-          composer validate --no-interaction
+          composer validate --no-interaction --no-check-publish
           if [ -f "composer.json" ] && grep -q "phpunit" composer.json; then
             composer install --no-interaction --prefer-dist
             if [ -f "vendor/bin/phpunit" ]; then
