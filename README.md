@@ -35,7 +35,7 @@ Les clés JWT, la base de données et les environnements `.env` sont configurés
 - Chaque pull request/commit sur `preprod` déclenche un build et un déploiement de préproduction (protégée) avec URL preview.
 - Build rapide grâce au cache Vercel (node_modules, artifacts) et au CDN pour l’invalidation instantanée.
   - Commande de build (Vercel): `npm ci && npm run build` dans `frontend/`.
-  - La variable `VITE_API_URL` pointe vers l’API AlwaysData.
+  - La variable `VITE_API_URL` pointe vers l’API AlwaysData (sans slash final, ex: `https://api.example.com`).
 
 ### Backend (AlwaysData)
 
@@ -45,6 +45,7 @@ Les clés JWT, la base de données et les environnements `.env` sont configurés
   - migrations (si besoin) `php bin/console doctrine:migrations:migrate --no-interaction`
   - `php bin/console cache:clear --env=prod`
   - reload de PHP-FPM / app selon la config AlwaysData
+  - Astuce réseau en cas d’erreurs HTTP/2 Packagist: `COMPOSER_MAX_PARALLEL_HTTP=1 composer install --no-interaction --prefer-dist --no-progress`
 
 ### Images Docker (CI)
 
@@ -64,6 +65,18 @@ Les clés JWT, la base de données et les environnements `.env` sont configurés
 - Backend (`backend/`)
   - PHPStan (analyse statique) via `phpstan.neon.dist`.
   - Commande: `composer stan`.
+
+### Installation Backend (Composer)
+
+- Utiliser le lock pour des builds stables:
+  ```bash
+  cd backend
+  composer install --no-interaction --prefer-dist --no-progress
+  ```
+- Si le réseau est capricieux (AlwaysData):
+  ```bash
+  COMPOSER_MAX_PARALLEL_HTTP=1 composer install --no-interaction --prefer-dist --no-progress
+  ```
 
 ## 🧪 Tests & automatisation
 
@@ -150,7 +163,7 @@ npm run dev
 
 ```bash
 cd backend
-composer install
+composer install --no-interaction --prefer-dist --no-progress
 symfony serve
 ```
 
@@ -166,6 +179,21 @@ php bin/console lexik:jwt:generate-keypair
 ```
 
 > Assure-toi que les droits sont corrects sur les fichiers `.pem`
+
+### Variables d’environnement Backend
+
+- À définir via `backend/.env` (exemples dans `backend/.env.example`). Ne jamais committer de secrets.
+  - `APP_ENV`, `APP_DEBUG`, `APP_SECRET`
+  - `CORS_ALLOW_ORIGIN` (regex accepté)
+  - `DATABASE_URL`
+  - `JWT_SECRET_KEY`, `JWT_PUBLIC_KEY`, `JWT_PASSPHRASE`
+- Les chemins définis dans `.env` doivent correspondre aux fichiers générés (ex: `config/jwt/private.pem`, `config/jwt/public.pem`).
+
+### Sécurité API
+
+- Authentification JWT, rôles `ROLE_USER` et `ROLE_ADMIN`.
+- Rate limiting sur les endpoints sensibles.
+- Contrôles d’accès au niveau API Platform (providers/processors) avec vérifications d’appartenance et garde `instanceof User` pour éviter les erreurs de typage.
 
 ---
 
