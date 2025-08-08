@@ -8,6 +8,7 @@ parameters:
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
     - '#Cannot call method .* on null#'
-  excludes_analyse:
-    - vendor
-    - var
+  excludePaths:
+    analyse:
+      - vendor/*
+      - var/*
