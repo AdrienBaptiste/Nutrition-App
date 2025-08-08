@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../atoms/Card';
 
+/**
+ * Carte affichant le détail nutritionnel d'un constituant de repas :
+ * - soit un aliment (food + quantité)
+ * - soit un plat (dish + nombre de portions)
+ *
+ * Si plat : fetch la nutrition du plat via l'API backend.
+ * Affiche les valeurs calculées pour la quantité/portion choisie.
+ */
 interface ConstituteNutritionCardProps {
   constitute: {
     id?: number;
@@ -23,6 +31,12 @@ interface ConstituteNutritionCardProps {
   onRemove?: () => void;
 }
 
+/**
+ * Composant affichant la nutrition d'un aliment ou plat dans un repas.
+ * - Si aliment : calcule directement les valeurs pour la quantité donnée.
+ * - Si plat : fetch la nutrition du plat (pour 1 portion) puis multiplie par le nombre de portions.
+ * - Affiche un bouton de suppression si onRemove est fourni.
+ */
 const ConstituteNutritionCard: React.FC<ConstituteNutritionCardProps> = ({
   constitute,
   jwt,
@@ -37,7 +51,7 @@ const ConstituteNutritionCard: React.FC<ConstituteNutritionCardProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Si c'est un plat, on fetch la nutrition du plat
+  // Si c'est un plat, on fetch la nutrition (pour 1 portion) depuis l'API backend
   useEffect(() => {
     if (constitute.dish && constitute.dish.id && constitute.dish_quantity) {
       setLoading(true);
@@ -81,7 +95,7 @@ const ConstituteNutritionCard: React.FC<ConstituteNutritionCardProps> = ({
               ? `${constitute.food_quantity}g`
               : `${constitute.dish_quantity} portion${(constitute.dish_quantity || 0) > 1 ? 's' : ''}`}
           </p>
-          {/* Détail nutrition aliment */}
+          {/* Affichage nutrition pour un aliment (calcul direct selon quantité) */}
           {constitute.food && constitute.food_quantity && (
             <div className="text-xs text-gray-500 space-y-1 mt-1">
               <div>

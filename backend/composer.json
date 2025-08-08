@@ -67,6 +67,12 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
+        "test": [
+            "@php vendor/bin/phpunit --testdox"
+        ],
+        "stan": [
+            "@php vendor/bin/phpstan analyse -c phpstan.neon.dist"
+        ],
         "post-install-cmd": [
             "@auto-scripts"
         ],
@@ -85,6 +91,8 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.1",
-        "symfony/maker-bundle": "^1.64"
+        "symfony/maker-bundle": "^1.64",
+        "phpunit/phpunit": "^11.3",
+        "phpstan/phpstan": "^1.11"
     }
 }

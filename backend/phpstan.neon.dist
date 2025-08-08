@@ -1,0 +1,13 @@
+parameters:
+  level: 7
+  paths:
+    - src
+  tmpDir: var/phpstan
+  checkMissingIterableValueType: true
+  checkGenericClassInNonGenericObjectType: true
+  reportUnmatchedIgnoredErrors: true
+  ignoreErrors:
+    - '#Cannot call method .* on null#'
+  excludes_analyse:
+    - vendor
+    - var
