@@ -5,11 +5,15 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Food;
+use App\Entity\User;
 use App\Repository\FoodRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @implements ProcessorInterface<Food, Food|null>
+ */
 class FoodStateProcessor implements ProcessorInterface
 {
     public function __construct(
@@ -68,12 +72,18 @@ class FoodStateProcessor implements ProcessorInterface
             }
 
             $user = $this->security->getUser();
-            
+
             if (!$user || !$data instanceof Food) {
                 $this->logger->error('[FOOD DEBUG] Access denied', [
                     'hasUser' => $user !== null,
                     'isFood' => $data instanceof Food
                 ]);
+                throw new \RuntimeException('Access denied');
+            }
+
+            if (!$user instanceof User) {
+                // Sécurise les appels à getId()/getEmail() et setUser(User)
+                $this->logger->error('[FOOD DEBUG] Unexpected user type', [ 'type' => get_debug_type($user) ]);
                 throw new \RuntimeException('Access denied');
             }
 
@@ -91,7 +101,7 @@ class FoodStateProcessor implements ProcessorInterface
 
         // Pour les créations (POST)
         if ($operation instanceof \ApiPlatform\Metadata\Post) {
-            $data->setUser($user); // Associer l'aliment à l'utilisateur connecté
+            $data->setUser($user); // Associer l'aliment à l'utilisateur connecté (User concret)
             
             // Les nouveaux aliments sont en attente de validation par défaut
             if (!$isAdmin) {

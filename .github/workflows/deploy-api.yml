@@ -15,6 +15,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run backend tests (PHPUnit)
+        working-directory: backend
+        run: |
+          if [ -f "vendor/bin/phpunit" ]; then
+            vendor/bin/phpunit --testdox
+          else
+            echo "PHPUnit not installed; skipping tests"
+          fi
+
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh

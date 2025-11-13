@@ -5,9 +5,13 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Contain;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProcessorInterface<Contain, Contain|null>
+ */
 class ContainStateProcessor implements ProcessorInterface
 {
     public function __construct(
@@ -20,6 +24,9 @@ class ContainStateProcessor implements ProcessorInterface
         $user = $this->security->getUser();
         
         if (!$user || !$data instanceof Contain) {
+            throw new \RuntimeException('Access denied');
+        }
+        if (!$user instanceof User) {
             throw new \RuntimeException('Access denied');
         }
 

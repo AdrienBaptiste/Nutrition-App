@@ -5,9 +5,13 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Constitute;
+use App\Entity\User;
 use App\Repository\ConstituteRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProviderInterface<Constitute>
+ */
 class ConstituteStateProvider implements ProviderInterface
 {
     public function __construct(
@@ -29,7 +33,7 @@ class ConstituteStateProvider implements ProviderInterface
             return $this->constituteRepository->createQueryBuilder('c')
                 ->join('c.meal', 'm')
                 ->where('m.user = :user')
-                ->setParameter('user', $user)
+                ->setParameter('user', $user instanceof User ? $user : null)
                 ->getQuery()
                 ->getResult();
         }
@@ -39,7 +43,7 @@ class ConstituteStateProvider implements ProviderInterface
             $constitute = $this->constituteRepository->find($uriVariables['id']);
             
             // Vérifier que le repas appartient à l'utilisateur connecté
-            if ($constitute && $constitute->getMeal()->getUser() === $user) {
+            if ($constitute && $user instanceof User && $constitute->getMeal()->getUser() === $user) {
                 return $constitute;
             }
             

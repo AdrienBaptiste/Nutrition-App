@@ -5,9 +5,13 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Contain;
+use App\Entity\User;
 use App\Repository\ContainRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProviderInterface<Contain>
+ */
 class ContainStateProvider implements ProviderInterface
 {
     public function __construct(
@@ -29,7 +33,7 @@ class ContainStateProvider implements ProviderInterface
             return $this->containRepository->createQueryBuilder('c')
                 ->join('c.dish', 'd')
                 ->where('d.user = :user')
-                ->setParameter('user', $user)
+                ->setParameter('user', $user instanceof User ? $user : null)
                 ->getQuery()
                 ->getResult();
         }
@@ -39,7 +43,7 @@ class ContainStateProvider implements ProviderInterface
             $contain = $this->containRepository->find($uriVariables['id']);
             
             // Vérifier que le plat appartient à l'utilisateur connecté
-            if ($contain && $contain->getDish()->getUser() === $user) {
+            if ($contain && $user instanceof User && $contain->getDish()->getUser() === $user) {
                 return $contain;
             }
             

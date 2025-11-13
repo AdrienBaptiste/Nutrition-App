@@ -5,9 +5,13 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Food;
+use App\Entity\User;
 use App\Repository\FoodRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProviderInterface<Food>
+ */
 class FoodStateProvider implements ProviderInterface
 {
     public function __construct(
@@ -19,11 +23,12 @@ class FoodStateProvider implements ProviderInterface
     {
         $user = $this->security->getUser();
 
-        $isAdmin = $user && (
-            $this->security->isGranted('ROLE_ADMIN') || 
-            $user->getEmail() === 'admin@nutrition.app' ||
-            str_contains($user->getEmail(), 'admin')
-        );
+        $isAdmin = false;
+        if ($user instanceof User) {
+            $isAdmin = $this->security->isGranted('ROLE_ADMIN') || 
+                $user->getEmail() === 'admin@nutrition.app' ||
+                str_contains($user->getEmail(), 'admin');
+        }
 
         // Si c'est une collection (GET /api/v1/foods)
         if ($operation instanceof \ApiPlatform\Metadata\GetCollection) {
@@ -51,7 +56,7 @@ class FoodStateProvider implements ProviderInterface
                         ->orWhere('f.status = :pending AND f.user = :user')
                         ->setParameter('active', 'active')
                         ->setParameter('pending', 'pending')
-                        ->setParameter('user', $user)
+                        ->setParameter('user', $user instanceof User ? $user : null)
                         ->orderBy('f.name', 'ASC');
                     
                     return $qb->getQuery()->getResult();

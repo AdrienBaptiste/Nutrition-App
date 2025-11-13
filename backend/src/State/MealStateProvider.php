@@ -5,9 +5,13 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Meal;
+use App\Entity\User;
 use App\Repository\MealRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProviderInterface<Meal>
+ */
 class MealStateProvider implements ProviderInterface
 {
     public function __construct(
@@ -25,7 +29,7 @@ class MealStateProvider implements ProviderInterface
 
         // Si c'est une collection (GET /api/v1/meals)
         if ($operation instanceof \ApiPlatform\Metadata\GetCollection) {
-            return $this->mealRepository->findBy(['user' => $user], ['date' => 'DESC']);
+            return $this->mealRepository->findBy(['user' => $user instanceof User ? $user : null], ['date' => 'DESC']);
         }
 
         // Si c'est un élément spécifique (GET /api/v1/meals/{id})
@@ -33,7 +37,7 @@ class MealStateProvider implements ProviderInterface
             $meal = $this->mealRepository->find($uriVariables['id']);
             
             // Vérifier que le repas appartient à l'utilisateur connecté
-            if ($meal && $meal->getUser() === $user) {
+            if ($meal && $user instanceof User && $meal->getUser() === $user) {
                 return $meal;
             }
             

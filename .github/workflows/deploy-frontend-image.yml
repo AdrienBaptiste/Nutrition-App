@@ -14,6 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies (frontend)
+        run: npm ci
+        working-directory: frontend
+
+      - name: Run frontend tests (Vitest)
+        run: npm run test -- --run
+        working-directory: frontend
+
       - name: Docker login
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 

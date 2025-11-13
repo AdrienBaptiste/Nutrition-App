@@ -29,7 +29,8 @@ class PayloadSizeSubscriber implements EventSubscriberInterface
         if (!in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             return;
         }
-        $contentLength = (int) $request->headers->get('Content-Length', 0);
+        // HeaderBag::get default must be string|null, then cast
+        $contentLength = (int) ($request->headers->get('Content-Length', '0'));
         if ($contentLength > self::MAX_PAYLOAD_SIZE) {
             $event->setResponse(new JsonResponse([
                 'error' => 'Payload trop volumineux',

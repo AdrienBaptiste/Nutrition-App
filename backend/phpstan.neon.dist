@@ -1,0 +1,13 @@
+parameters:
+  level: 7
+  paths:
+    - src
+  tmpDir: var/phpstan
+  checkMissingIterableValueType: true
+  checkGenericClassInNonGenericObjectType: true
+  treatPhpDocTypesAsCertain: false
+  reportUnmatchedIgnoredErrors: false
+  excludePaths:
+    analyse:
+      - vendor/*
+      - var/*

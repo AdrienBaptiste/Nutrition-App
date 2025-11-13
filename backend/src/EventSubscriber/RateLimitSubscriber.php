@@ -4,10 +4,12 @@ namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimit;
 
 class RateLimitSubscriber implements EventSubscriberInterface
 {
@@ -81,7 +83,10 @@ class RateLimitSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function getClientIp($request): string
+    /**
+     * @param Request $request
+     */
+    private function getClientIp(Request $request): string
     {
         // Récupérer la vraie IP du client (en tenant compte des proxies)
         $ipKeys = ['HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'];
@@ -99,7 +104,10 @@ class RateLimitSubscriber implements EventSubscriberInterface
         return $request->getClientIp() ?? '127.0.0.1';
     }
 
-    private function throwRateLimitException($limit, $context = null): void
+    /**
+     * @param null|string $context
+     */
+    private function throwRateLimitException(RateLimit $limit, ?string $context = null): void
     {
         $retryAfter = $limit->getRetryAfter();
 
@@ -127,7 +135,10 @@ class RateLimitSubscriber implements EventSubscriberInterface
         throw new TooManyRequestsHttpException($retryAfter->getTimestamp() - time(), $userMessage, null, 429, $response->headers->all());
     }
 
-    private function addRateLimitHeaders($request, $limit): void
+    /**
+     * @param Request $request
+     */
+    private function addRateLimitHeaders(Request $request, RateLimit $limit): void
     {
         $retryAfter = $limit->getRetryAfter();
         
